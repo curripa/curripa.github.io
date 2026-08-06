@@ -1,7 +1,13 @@
 <p align="center">
-  <img src="public/recursos/SVG/LogoCurripa.svg" alt="Logo Curripa" height="120" />
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="public/recursos/SVG/LogoCurripa.svg" />
+    <img src="public/recursos/SVG/LogoCurripa-negro.svg" alt="Logo Curripa" height="120" />
+  </picture>
   <br />
-  <img src="public/recursos/SVG/Curripa.svg" alt="Curripa" height="60" />
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="public/recursos/SVG/Curripa.svg" />
+    <img src="public/recursos/SVG/Curripa-negro.svg" alt="Curripa" height="60" />
+  </picture>
 </p>
 
 <p align="center">Español · <a href="README.md">English</a></p>

@@ -1,0 +1,12 @@
+{
+  "id": "gurugu",
+  "name": "Gurugu",
+  "yearsActive": "2023",
+  "description": "Grindcore",
+  "history": "Gurugu es un grupo activo desde 2023, de estilo grindcore con influencias Asesino, Cabestro, Brujeria y Carcass.",
+  "bandcampUrl": "https://gurugu.bandcamp.com",
+  "logoSvg": "/recursos/SVG/Gurugu.svg",
+  "logoSvgNegro": "/recursos/SVG/Gurugu-negro.svg",
+  "historyEn": "Gurugu is a band active since 2023, of grindcore style with influences Asesino, Cabestro, Brujeria and Carcass.",
+  "descriptionEn": "Grindcore"
+}

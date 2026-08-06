@@ -1,0 +1,14 @@
+---
+import AlbumCard from "./AlbumCard.astro";
+import type { Album } from "../types";
+export interface Props {
+  albums: Album[];
+}
+const { albums } = Astro.props;
+---
+<div class="discography-view grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
+  {albums.map((album) => <AlbumCard album={album} />)}
+  {albums.length === 0 && (
+    <p class="col-span-full text-center opacity-60 italic" data-i18n="discography.empty">No discografía disponible</p>
+  )}
+</div>

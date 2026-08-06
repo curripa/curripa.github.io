@@ -1,0 +1,80 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Splash from "../components/Splash.astro";
+import BandSection from "../components/BandSection.astro";
+import type { Band, Album } from "../types";
+
+const bandFiles = await Astro.glob("../data/bands/*.json");
+const bands: Band[] = bandFiles
+  .map((f) => f.default)
+  .sort((a, b) => {
+    const ay = parseInt(a.yearsActive.match(/\d{4}/)?.[0] || "9999");
+    const by = parseInt(b.yearsActive.match(/\d{4}/)?.[0] || "9999");
+    return ay - by;
+  });
+
+const discographyModules = import.meta.glob("../data/generated/discography/*.json", {
+  eager: true,
+  import: "default",
+});
+function getDiscography(bandId: string): Album[] {
+  const path = `../data/generated/discography/${bandId}.json`;
+  const data = discographyModules[path];
+  return (data as Album[]) || [];
+}
+---
+<BaseLayout title="Curripa — Sello discográfico DIY" description="Sello discográfico DIY">
+  <main>
+    <Splash bands={bands} />
+    {bands.map((band) => (
+      <BandSection band={band} albums={getDiscography(band.id)} />
+    ))}
+  </main>
+</BaseLayout>
+
+<script>
+  function toggleHistory(el) {
+    const collapsed = el.classList.toggle("collapsed");
+    el.setAttribute("aria-expanded", String(!collapsed));
+  }
+
+  document.addEventListener("click", (e) => {
+    const historyEl = e.target.closest("[data-band-history]");
+    if (historyEl) {
+      toggleHistory(historyEl);
+      return;
+    }
+
+    const backToTop = e.target.closest("[data-back-to-top]");
+    if (backToTop) {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      return;
+    }
+
+    const card = e.target.closest("[data-album-id]");
+    if (card) {
+      const section = card.closest("[data-band-section]");
+      if (!section) return;
+      const albumId = card.dataset.albumId;
+      section.querySelector(".discography-view")?.classList.add("hidden");
+      const detail = section.querySelector(`[data-album-detail="${albumId}"]`);
+      if (detail) detail.classList.remove("hidden");
+    }
+
+    const back = e.target.closest(".album-back-btn");
+    if (back) {
+      const section = back.closest("[data-band-section]");
+      if (!section) return;
+      section.querySelectorAll("[data-album-detail]").forEach((el) => el.classList.add("hidden"));
+      section.querySelector(".discography-view")?.classList.remove("hidden");
+    }
+  });
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key !== "Enter" && e.key !== " ") return;
+    const historyEl = e.target.closest?.("[data-band-history]");
+    if (!historyEl) return;
+    e.preventDefault();
+    toggleHistory(historyEl);
+  });
+</script>

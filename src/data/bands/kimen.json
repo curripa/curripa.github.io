@@ -1,0 +1,12 @@
+{
+  "id": "kimen",
+  "name": "Kimen",
+  "yearsActive": "2013",
+  "description": "Death metal melódico",
+  "history": "Kimen es un grupo activo desde 2013, de estilo death metal melódico con influencias Sound of Silence, The Black Dahlia Murder, At the Gates, As Hope Dies y As Blood Runs Black.",
+  "bandcampUrl": "https://kimen.bandcamp.com",
+  "logoSvg": "/recursos/SVG/Kimen.svg",
+  "logoSvgNegro": "/recursos/SVG/Kimen-negro.svg",
+  "historyEn": "Kimen is a band active since 2013, of melodic death metal style with influences Sound of Silence, The Black Dahlia Murder, At the Gates and As Blood Runs Black.",
+  "descriptionEn": "Melodic death metal"
+}

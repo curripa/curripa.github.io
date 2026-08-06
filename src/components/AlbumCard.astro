@@ -1,0 +1,32 @@
+---
+import type { Album } from "../types";
+export interface Props {
+  album: Album;
+}
+const { album } = Astro.props;
+---
+<button
+  class="album-card group text-left cursor-pointer"
+  data-album-id={album.albumId}
+  data-album-title={album.title}
+  data-album-url={album.bandcampUrl}
+  data-album-cover={album.coverArt ?? ""}
+>
+  <div class="cover-wrapper aspect-square overflow-hidden mb-2 relative">
+    {album.coverArt ? (
+      <img
+        src={album.coverArt}
+        alt={album.title}
+        class="w-full h-full object-cover"
+      />
+    ) : (
+      <div class="w-full h-full flex items-center justify-center bg-gray-200 dark:bg-gray-800 text-sm" data-i18n="album.noCover">
+        Sin portada
+      </div>
+    )}
+  </div>
+  <p class="font-bold text-sm uppercase tracking-wide">{album.title}</p>
+  {album.year && <p class="text-xs opacity-70">{album.year}</p>}
+</button>
+
+

@@ -1,0 +1,261 @@
+---
+import type { Album } from "../types";
+export interface Props {
+  album: Album;
+}
+const { album } = Astro.props;
+const formatDuration = (s: number | null): string => {
+  if (!s) return "--:--";
+  const m = Math.floor(s / 60);
+  const sec = Math.floor(s % 60);
+  return `${m}:${sec.toString().padStart(2, "0")}`;
+};
+---
+<div class="flex flex-col md:flex-row gap-6 items-start">
+  {album.coverArt && (
+    <div class="w-full md:w-48 shrink-0 max-w-xs">
+      <img
+        src={album.coverArt}
+        alt={album.title}
+        class="w-full cursor-pointer"
+        onclick="document.getElementById('lightbox-img').src = this.src; document.getElementById('lightbox').classList.remove('hidden')"
+      />
+    </div>
+  )}
+  <div class="flex-1 min-w-0 w-full">
+    <div class="mb-4">
+      <h3 class="text-2xl md:text-3xl font-heading uppercase tracking-wider">{album.title}</h3>
+      {album.year && (
+        <p class="text-sm opacity-60 uppercase tracking-widest mt-1">{album.year}</p>
+      )}
+    </div>
+    {album.tracks.length > 0 && (
+      <div class="player-wrap" data-tracks={album.albumId}>
+        <div class="player-controls flex items-center gap-1 md:gap-2 mb-3 p-2 w-full min-w-0 bg-black/5 dark:bg-white/5 rounded">
+          <button class="ctrl-prev w-8 h-8 shrink-0 flex items-center justify-center border border-current text-sm hover:bg-ink hover:text-paper dark:hover:bg-paper dark:hover:text-ink transition-colors">⏮</button>
+          <button class="ctrl-play w-8 h-8 shrink-0 flex items-center justify-center border border-current text-sm hover:bg-ink hover:text-paper dark:hover:bg-paper dark:hover:text-ink transition-colors">▶</button>
+          <button class="ctrl-next w-8 h-8 shrink-0 flex items-center justify-center border border-current text-sm hover:bg-ink hover:text-paper dark:hover:bg-paper dark:hover:text-ink transition-colors">⏭</button>
+          <div class="relative shrink-0">
+            <button
+              class="ctrl-volume-btn w-8 h-8 shrink-0 flex items-center justify-center border border-current text-sm hover:bg-ink hover:text-paper dark:hover:bg-paper dark:hover:text-ink transition-colors"
+              aria-label="Volumen"
+              aria-expanded="false"
+            >
+              <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M3 9v6h4l5 5V4L7 9H3z"/>
+                <path d="M16 8a5 5 0 0 1 0 8l-1.5-1.5a3 3 0 0 0 0-5L16 8z"/>
+              </svg>
+            </button>
+            <div class="ctrl-volume-pop absolute bottom-full right-0 mb-2 z-10 hidden p-2 bg-paper dark:bg-ink border border-current rounded">
+              <input
+                class="ctrl-volume w-28"
+                type="range"
+                min="0"
+                max="1"
+                step="0.01"
+                aria-label="Volumen"
+              />
+            </div>
+          </div>
+          <span class="ctrl-label text-sm truncate flex-1 ml-2 opacity-80"></span>
+<span class="ctrl-time text-sm tabular-nums opacity-60 shrink-0 ml-2"></span>
+        </div>
+        <div class="track-list space-y-1">
+          {album.tracks.map((track) => (
+            <div class="track-row flex items-center gap-1 md:gap-2 px-2 py-1 rounded hover:bg-black/5 dark:hover:bg-white/5 transition-colors">
+              <span class="opacity-40 w-6 text-right shrink-0 tabular-nums">{track.trackNum}</span>
+              <button
+                class="track-play-btn w-6 h-6 shrink-0 flex items-center justify-center text-xs hover:opacity-60 transition-opacity"
+                data-audio-url={track.audioUrl}
+                aria-label={"Reproducir " + track.title}
+              >▶</button>
+              <span class="flex-1 truncate">{track.title.replace(/^[^-]+ - /, "")}</span>
+              <span class="opacity-40 tabular-nums shrink-0 mr-1">{formatDuration(track.duration)}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    )}
+    {album.tracks.length === 0 && album.bandcampUrl && (
+      <a
+        href={album.bandcampUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="inline-block px-8 py-3 border-2 border-current font-heading uppercase text-lg tracking-wider hover:bg-black hover:text-paper dark:hover:bg-white dark:hover:text-ink transition-colors"
+      >
+        Escuchar en Bandcamp →
+      </a>
+    )}
+  </div>
+</div>
+
+<style is:global>
+  .ctrl-volume {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 7rem;
+    height: 4px;
+    border-radius: 9999px;
+    background: currentColor;
+    opacity: 0.7;
+    cursor: pointer;
+    outline: none;
+  }
+  .ctrl-volume::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 14px;
+    height: 14px;
+    border-radius: 9999px;
+    background: var(--vthumb, #1a1a1a);
+    border: 2px solid var(--vthumb-border, #f5f0e8);
+    box-sizing: border-box;
+    cursor: grab;
+  }
+  .ctrl-volume::-moz-range-thumb {
+    width: 14px;
+    height: 14px;
+    border-radius: 9999px;
+    background: var(--vthumb, #1a1a1a);
+    border: 2px solid var(--vthumb-border, #f5f0e8);
+    box-sizing: border-box;
+    cursor: grab;
+  }
+  .ctrl-volume:hover {
+    opacity: 1;
+  }
+  .ctrl-volume:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 3px;
+  }
+  .dark .ctrl-volume::-webkit-slider-thumb {
+    background: var(--vthumb, #f5f0e8);
+    border-color: var(--vthumb-border, #1a1a1a);
+  }
+  .dark .ctrl-volume::-moz-range-thumb {
+    background: var(--vthumb, #f5f0e8);
+    border-color: var(--vthumb-border, #1a1a1a);
+  }
+</style>
+
+<script>
+  import player from "../scripts/player.js";
+
+  document.querySelectorAll(".player-wrap").forEach((wrap) => {
+    const controls = wrap.querySelector(".player-controls");
+    const prevBtn = controls?.querySelector(".ctrl-prev");
+    const playBtn = controls?.querySelector(".ctrl-play");
+    const nextBtn = controls?.querySelector(".ctrl-next");
+    const nowLabel = controls?.querySelector(".ctrl-label");
+    const timeLabel = controls?.querySelector(".ctrl-time");
+    const volumeBtn = controls?.querySelector(".ctrl-volume-btn");
+    const volumePop = controls?.querySelector(".ctrl-volume-pop");
+    const volumeInput = controls?.querySelector(".ctrl-volume");
+    const rows = wrap.querySelectorAll(".track-row");
+
+    const tracks = Array.from(rows).map((row) => ({
+      audioUrl: row.querySelector(".track-play-btn")?.dataset.audioUrl,
+      title: row.querySelector(".flex-1")?.textContent?.trim() || "",
+      trackNum: parseInt(row.querySelector(".tabular-nums")?.textContent) || 0,
+    })).filter((t) => t.audioUrl);
+
+    function getTrackByAudioUrl(url) {
+      return tracks.find((t) => t.audioUrl === url);
+    }
+
+    const fmt = (s) => {
+      if (!Number.isFinite(s) || s < 0) return "--:--";
+      const m = Math.floor(s / 60);
+      const sec = Math.floor(s % 60);
+      return `${m}:${sec.toString().padStart(2, "0")}`;
+    };
+
+    let activeAlbum = false;
+
+    function syncUI() {
+      const st = player.getState();
+      const isThisAlbum = st.track && tracks.some((t) => t.audioUrl === st.track.audioUrl);
+      activeAlbum = !!isThisAlbum;
+      if (timeLabel) timeLabel.classList.toggle("hidden", !activeAlbum);
+
+      if (isThisAlbum) {
+        if (nowLabel) nowLabel.textContent = st.track.title.replace(/^[^-]+ - /, "");
+        if (playBtn) playBtn.textContent = st.playing ? "■" : "▶";
+        rows.forEach((row) => {
+          const btn = row.querySelector(".track-play-btn");
+          const url = btn?.dataset.audioUrl;
+          const match = url && st.track && url === st.track.audioUrl;
+          row.classList.toggle("bg-black/10", !!match);
+          row.classList.toggle("dark:bg-white/10", !!match);
+          if (btn) btn.textContent = match && st.playing ? "■" : "▶";
+        });
+      } else {
+        if (nowLabel) nowLabel.textContent = "";
+        if (timeLabel) timeLabel.textContent = "";
+        if (playBtn) playBtn.textContent = "▶";
+        rows.forEach((row) => {
+          row.classList.remove("bg-black/10", "dark:bg-white/10");
+          const btn = row.querySelector(".track-play-btn");
+          if (btn) btn.textContent = "▶";
+        });
+      }
+    }
+
+    rows.forEach((row) => {
+      const btn = row.querySelector(".track-play-btn");
+      btn?.addEventListener("click", () => {
+        const url = btn.dataset.audioUrl;
+        const track = getTrackByAudioUrl(url);
+        if (track) player.toggle(track, tracks);
+      });
+    });
+
+    prevBtn?.addEventListener("click", () => player.prev());
+    playBtn?.addEventListener("click", () => {
+      const st = player.getState();
+      if (st.track && tracks.some((t) => t.audioUrl === st.track.audioUrl)) {
+        player.toggle(st.track, tracks);
+      } else if (tracks.length > 0) {
+        player.toggle(tracks[0], tracks);
+      }
+    });
+    nextBtn?.addEventListener("click", () => player.next());
+
+    if (volumeInput && volumePop && volumeBtn) {
+      volumeInput.value = String(player.getState().volume);
+      volumeInput.addEventListener("input", () => player.setVolume(volumeInput.value));
+      volumeBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const open = volumePop.classList.toggle("hidden");
+        volumeBtn.setAttribute("aria-expanded", String(!open));
+      });
+      document.addEventListener("click", () => {
+        if (!volumePop.classList.contains("hidden")) {
+          volumePop.classList.add("hidden");
+          volumeBtn.setAttribute("aria-expanded", "false");
+        }
+      });
+      volumePop.addEventListener("click", (e) => e.stopPropagation());
+      document.addEventListener("player:volumechange", (e) => {
+        if (volumeInput.value !== String(e.detail.volume)) {
+          volumeInput.value = String(e.detail.volume);
+        }
+      });
+    }
+
+    document.addEventListener("player:statechange", syncUI);
+    document.addEventListener("player:timeupdate", (e) => {
+      const cur = e.detail.currentTime;
+      if (timeLabel && activeAlbum && cur > 0) timeLabel.textContent = fmt(cur);
+    });
+    document.addEventListener("player:error", () => {
+      if (nowLabel) {
+        const prev = nowLabel.textContent;
+        nowLabel.textContent = "Error al reproducir";
+        setTimeout(() => { if (nowLabel.textContent === "Error al reproducir") nowLabel.textContent = prev; }, 2000);
+      }
+    });
+    syncUI();
+  });
+
+</script>

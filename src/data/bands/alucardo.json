@@ -1,0 +1,12 @@
+{
+  "id": "alucardo",
+  "name": "Alucardo",
+  "yearsActive": "2017",
+  "description": "Death metal melódico",
+  "history": "Alucardo es un grupo activo desde 2017, de estilo death metal melódico con influencias Sound of Silence, The Black Dahlia Murder, At the Gates, As Hope Dies y As Blood Runs Black.",
+  "bandcampUrl": "https://alucardo.bandcamp.com",
+  "logoSvg": "/recursos/SVG/Alucardo.svg",
+  "logoSvgNegro": "/recursos/SVG/Alucardo-negro.svg",
+  "historyEn": "Alucardo is a band active since 2017, of melodic death metal style with influences Sound of Silence, The Black Dahlia Murder, At the Gates, As Hope Dies and As Blood Runs Black.",
+  "descriptionEn": "Melodic death metal"
+}

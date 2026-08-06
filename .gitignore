@@ -1,0 +1,33 @@
+# Dependencias
+node_modules/
+.pnpm-store
+
+# Build
+dist/
+.astro/
+.cache/
+.vercel
+.netlify
+
+# Logs y cache
+*.log
+*.tsbuildinfo
+.eslintcache
+
+# Sistema
+.DS_Store
+
+# Entornos
+*.env
+
+# Contenido generado desde Bandcamp (se regenera en cada deploy con el workflow)
+src/data/generated/
+
+# Ficheros solo-workspace (no forman parte del sitio)
+openspec/
+openspec*.md
+curripa.txt
+bands.txt
+badncamp.txt
+.opencode/
+recursos/

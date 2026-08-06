@@ -1,0 +1,40 @@
+---
+import type { Band } from "../types";
+export interface Props {
+  bands: Band[];
+}
+const { bands } = Astro.props;
+---
+<section id="splash" class="min-h-screen flex flex-col items-center justify-center text-center px-4 py-16">
+  <img
+    src="/recursos/SVG/LogoCurripa-negro.svg"
+    alt="Logo Curripa"
+    class="h-32 md:h-48 mb-4 dark:hidden"
+  />
+  <img
+    src="/recursos/SVG/LogoCurripa.svg"
+    alt="Logo Curripa"
+    class="h-32 md:h-48 mb-4 hidden dark:block"
+  />
+  <img
+    src="/recursos/SVG/Curripa-negro.svg"
+    alt="Curripa"
+    class="h-16 md:h-20 mb-8 dark:hidden"
+  />
+  <img
+    src="/recursos/SVG/Curripa.svg"
+    alt="Curripa"
+    class="h-16 md:h-20 mb-8 hidden dark:block"
+  />
+  <p class="text-lg md:text-xl max-w-xl mb-14 text-balance" data-i18n="splash.tagline">
+    Sello discográfico DIY. Todos los grupos son autoproducidos, grabados, mezclados y masterizados por el mismo autor.
+  </p>
+  <nav class="flex flex-wrap gap-8 justify-center items-center">
+    {bands.map((band) => (
+      <a href={`#${band.id}`} class="hover:opacity-70 transition-opacity flex items-center justify-center h-16 md:h-20 w-48 md:w-56">
+        <img src={band.logoSvgNegro} alt={band.name} class="max-h-full max-w-full object-contain dark:hidden" />
+        <img src={band.logoSvg} alt={band.name} class="max-h-full max-w-full object-contain hidden dark:block" />
+      </a>
+    ))}
+  </nav>
+</section>

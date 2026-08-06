@@ -1,0 +1,33 @@
+[
+  {
+    "albumId": "demo",
+    "title": "Demo",
+    "year": 2017,
+    "coverArt": "https://f4.bcbits.com/img/a3478047366_10.jpg",
+    "bandcampUrl": "https://siaraza.bandcamp.com/album/demo",
+    "numericId": 1169725276,
+    "tracks": [
+      {
+        "trackNum": 1,
+        "title": "Miedo",
+        "trackId": 4086976080,
+        "duration": 312,
+        "audioUrl": "https://t4.bcbits.com/stream/d1ea66d9775194ac7fd8fec0b542f791/mp3-128/4086976080?p=0&ts=1786136552&t=a3f73f78b818347c36327cbc5d0f4b6a4b7ddd50&token=1786136552_0c9324fd5fa6a00a297432dcdb294d1233972497"
+      },
+      {
+        "trackNum": 2,
+        "title": "Impotencia",
+        "trackId": 307782455,
+        "duration": 266.25,
+        "audioUrl": "https://t4.bcbits.com/stream/c55ff9300989ad70f1ad258c42798d07/mp3-128/307782455?p=0&ts=1786136552&t=b60c1797a0d2b5694b470678d9c7bbf6d6e49ca8&token=1786136552_708a73100be50029bee2db78a11b531131d6f2e5"
+      },
+      {
+        "trackNum": 3,
+        "title": "Arder",
+        "trackId": 29320336,
+        "duration": 409.92,
+        "audioUrl": "https://t4.bcbits.com/stream/4f0ddb8524e72534f41b4d0ea5b4c583/mp3-128/29320336?p=0&ts=1786136552&t=61764931ec7bb0fa622e4a0715f526666b21b1f0&token=1786136552_60e3b41f07f35360a450a9fe5570782bfaddfe88"
+      }
+    ]
+  }
+]

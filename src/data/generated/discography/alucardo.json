@@ -1,0 +1,61 @@
+[
+  {
+    "albumId": "noises-of-the-night",
+    "title": "Noises of the night",
+    "year": 2017,
+    "coverArt": "https://f4.bcbits.com/img/a0375243211_10.jpg",
+    "bandcampUrl": "https://alucardo.bandcamp.com/album/noises-of-the-night",
+    "numericId": 1622872428,
+    "tracks": [
+      {
+        "trackNum": 1,
+        "title": "Prologue",
+        "trackId": 387090631,
+        "duration": 136,
+        "audioUrl": "https://t4.bcbits.com/stream/67b2bab189cb47cd1195d395e1b9da73/mp3-128/387090631?p=0&ts=1786136536&t=8a7967c3234844f56f86b10e2f011f85828a94df&token=1786136536_8a776b24e8109d6de1c73842165abb3357a06671"
+      },
+      {
+        "trackNum": 2,
+        "title": "Vampire killer",
+        "trackId": 3930436159,
+        "duration": 243.789,
+        "audioUrl": "https://t4.bcbits.com/stream/ebc753caf627e74e35548bfbaf3956fd/mp3-128/3930436159?p=0&ts=1786136536&t=1d6e7812daea22ca95f56e525ce5ea95f213912c&token=1786136536_fafdf48647f5421b62583f243a3ad9e20af61915"
+      },
+      {
+        "trackNum": 3,
+        "title": "Festival of Servants",
+        "trackId": 1907954511,
+        "duration": 112.286,
+        "audioUrl": "https://t4.bcbits.com/stream/d8edd514abd077e7658efe43dd456495/mp3-128/1907954511?p=0&ts=1786136536&t=111a4eab8287b9c1ba7f7be56b1455e347453a9c&token=1786136536_3348c613116853942084f80d1a71f6b5a4e64a82"
+      },
+      {
+        "trackNum": 4,
+        "title": "Eyes wide open",
+        "trackId": 2957083259,
+        "duration": 67,
+        "audioUrl": "https://t4.bcbits.com/stream/d03bc4d7be25edc9e00ea4d28917d2c2/mp3-128/2957083259?p=0&ts=1786136536&t=31306cf1d56610d866735c496f0cbc7bb0eae63d&token=1786136536_a8d6c27ff2e2595e4ebb4cc77be8309a7ef726c4"
+      },
+      {
+        "trackNum": 5,
+        "title": "Bloody tears",
+        "trackId": 1252067634,
+        "duration": 228.857,
+        "audioUrl": "https://t4.bcbits.com/stream/98564860036fa084f2794618cdafbf2d/mp3-128/1252067634?p=0&ts=1786136536&t=c78633e76d74ef76b43450885c1e67086fa5af07&token=1786136536_8228e80594e73e7689e375c48309a687c8bd4792"
+      },
+      {
+        "trackNum": 6,
+        "title": "Battle of the Saints",
+        "trackId": 3744143648,
+        "duration": 168.973,
+        "audioUrl": "https://t4.bcbits.com/stream/15694bc10f889ae6eb5b255ef500683b/mp3-128/3744143648?p=0&ts=1786136536&t=74ed0136bf4e83d82343b8d2343b1713f71c18f7&token=1786136536_7b6ca30e21de8c2f5e341a4d4a6497d92f5237c9"
+      },
+      {
+        "trackNum": 7,
+        "title": "Tragic prince",
+        "trackId": 1458206582,
+        "duration": 260.308,
+        "audioUrl": "https://t4.bcbits.com/stream/a1dce821050474fe227ad7b92e70c32c/mp3-128/1458206582?p=0&ts=1786136536&t=937fdcbe7015b685e23749c4ea0f6eba9a35d640&token=1786136536_a4fd9e2b2d0f6605074be36ecae5f004d528733f"
+      }
+    ]
+  }
+]

@@ -1,0 +1,47 @@
+[
+  {
+    "albumId": "demo",
+    "title": "Demo",
+    "year": 2017,
+    "coverArt": "https://f4.bcbits.com/img/a3992557106_10.jpg",
+    "bandcampUrl": "https://silentcurrent.bandcamp.com/album/demo",
+    "numericId": 1990762791,
+    "tracks": [
+      {
+        "trackNum": 1,
+        "title": "Take",
+        "trackId": 226333473,
+        "duration": 225,
+        "audioUrl": "https://t4.bcbits.com/stream/249dc80b12525ba373214ad0c36e02d5/mp3-128/226333473?p=0&ts=1786136553&t=ea4a45c1a040b45c1ada22912b5d4de7fd8d9da6&token=1786136553_dc774662a0adecf1c0b37b21348e710786a1cf93"
+      },
+      {
+        "trackNum": 2,
+        "title": "Ask",
+        "trackId": 218721065,
+        "duration": 236.16,
+        "audioUrl": "https://t4.bcbits.com/stream/605936e5d91b2b7b990a2dd9fc9f172c/mp3-128/218721065?p=0&ts=1786136553&t=8d61c3ef0165d1bce6e773b7f76befd279057a82&token=1786136553_cc01e47168e159d4f2a747e3d19dfebd2b03a1c6"
+      },
+      {
+        "trackNum": 3,
+        "title": "Heat",
+        "trackId": 2721656291,
+        "duration": 281.684,
+        "audioUrl": "https://t4.bcbits.com/stream/eb2319719eb1b91c75a710cdbc38bf9a/mp3-128/2721656291?p=0&ts=1786136553&t=71814e81be109ce4acaff17f01b799b7cc9c0bbb&token=1786136553_6f245e3323e5e184a5b10f7d53bc61e747945231"
+      },
+      {
+        "trackNum": 4,
+        "title": "Cold",
+        "trackId": 1506403226,
+        "duration": 220.364,
+        "audioUrl": "https://t4.bcbits.com/stream/4ea6fcba1599049659270c1800bbd77e/mp3-128/1506403226?p=0&ts=1786136553&t=7a086c645b27b271fc1844d109b5711ee6f28c5a&token=1786136553_d363fc3e02a097d5e35e1a85bce66a52c6d29094"
+      },
+      {
+        "trackNum": 5,
+        "title": "Give",
+        "trackId": 2531993316,
+        "duration": 194.286,
+        "audioUrl": "https://t4.bcbits.com/stream/752ff2f0d62ee045df52f7fff6778e9d/mp3-128/2531993316?p=0&ts=1786136553&t=fd201587154697988e5fc66d5fdf5ea0d03fa33a&token=1786136553_9229dddc16ffeda535f29852391c2ca8d3020a61"
+      }
+    ]
+  }
+]

@@ -1,0 +1,54 @@
+[
+  {
+    "albumId": "demo",
+    "title": "Demo",
+    "year": 2013,
+    "coverArt": "https://f4.bcbits.com/img/a1516421868_10.jpg",
+    "bandcampUrl": "https://bajolasnubes.bandcamp.com/album/demo",
+    "numericId": 834168226,
+    "tracks": [
+      {
+        "trackNum": 1,
+        "title": "Seguir",
+        "trackId": 1674971356,
+        "duration": 197.333,
+        "audioUrl": "https://t4.bcbits.com/stream/38e3b426d2d3dfe43c121a640384b5c3/mp3-128/1674971356?p=0&ts=1786136538&t=07c95fd5efe13ef32fbd338fdc04e06f75591b61&token=1786136538_fb48c4d4949f4ce8324b395031757bb25cb88745"
+      },
+      {
+        "trackNum": 2,
+        "title": "Conseguir",
+        "trackId": 1814460962,
+        "duration": 164.213,
+        "audioUrl": "https://t4.bcbits.com/stream/529af33328126b6484d36ee2232c7adf/mp3-128/1814460962?p=0&ts=1786136538&t=bd027faae9d7bed07d41fa8c5b22bb037f58dd3e&token=1786136538_631fce95c64b30577f7f9aaca1efbb7aec9ab8b0"
+      },
+      {
+        "trackNum": 3,
+        "title": "Pálido",
+        "trackId": 1841924417,
+        "duration": 168.56,
+        "audioUrl": "https://t4.bcbits.com/stream/3674d7dc63ebbc25e00b48564847ffa9/mp3-128/1841924417?p=0&ts=1786136538&t=a4f0b050d03bf53e4a23b6e22e719970f32c0f76&token=1786136538_9717ae58bc91cd83c173077c7fe811b607abd184"
+      },
+      {
+        "trackNum": 4,
+        "title": "Transito",
+        "trackId": 720896648,
+        "duration": 223.2,
+        "audioUrl": "https://t4.bcbits.com/stream/67811d2d2d2c28b8c85526363bc3906c/mp3-128/720896648?p=0&ts=1786136538&t=d0953650cffbd01bb20fb98ff745b524bf2c441d&token=1786136538_683301fd7edea65e67825c575618e94414668cdd"
+      },
+      {
+        "trackNum": 5,
+        "title": "Mentiras",
+        "trackId": 1053465260,
+        "duration": 209.147,
+        "audioUrl": "https://t4.bcbits.com/stream/a79997a733e75b8497b89472df114516/mp3-128/1053465260?p=0&ts=1786136538&t=abfb1d4d3d9ddb298e7a4d89c61d5a9437b2f635&token=1786136538_be90b7861583eb5d66845903df998b9d565f50f4"
+      },
+      {
+        "trackNum": 6,
+        "title": "Grito",
+        "trackId": 1064377803,
+        "duration": 181.846,
+        "audioUrl": "https://t4.bcbits.com/stream/116b74e88d4250e50b22198a1eb441b4/mp3-128/1064377803?p=0&ts=1786136538&t=1817837b1163d5e2fe4037613bb752bf05d0ffa4&token=1786136538_3f8e5f2f012f7abc5fe0551b44dc6e12585eadd0"
+      }
+    ]
+  }
+]

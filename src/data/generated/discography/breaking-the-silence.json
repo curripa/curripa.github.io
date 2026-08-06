@@ -1,0 +1,54 @@
+[
+  {
+    "albumId": "echoes-of-the-fallen",
+    "title": "Echoes of the fallen",
+    "year": 2013,
+    "coverArt": "https://f4.bcbits.com/img/a1197270554_10.jpg",
+    "bandcampUrl": "https://breakingthesilence.bandcamp.com/album/echoes-of-the-fallen",
+    "numericId": 1225810315,
+    "tracks": [
+      {
+        "trackNum": 1,
+        "title": "Init",
+        "trackId": 1762883220,
+        "duration": 108,
+        "audioUrl": "https://t4.bcbits.com/stream/c08578214d53342ad4b1fb8f32d87915/mp3-128/1762883220?p=0&ts=1786136540&t=00f55269ce93fe4aa6c65998adef275c56962d3c&token=1786136540_0f4c447548540e9a34ac9b3a461ec752010dcdd1"
+      },
+      {
+        "trackNum": 2,
+        "title": "Bottom",
+        "trackId": 1553711986,
+        "duration": 154.667,
+        "audioUrl": "https://t4.bcbits.com/stream/e3fba7ff552ffad0af7718d2c114b86f/mp3-128/1553711986?p=0&ts=1786136540&t=f003734f37cde16faa1a61b47ea104b4b7c47520&token=1786136540_466dd6eeaab0790e3ea3c683101fbdbae9956ebc"
+      },
+      {
+        "trackNum": 3,
+        "title": "Air",
+        "trackId": 4065399025,
+        "duration": 267.789,
+        "audioUrl": "https://t4.bcbits.com/stream/97d3ea923cdb72ee28a3ec6ac81f7c0a/mp3-128/4065399025?p=0&ts=1786136540&t=532c148c493674a46412679a54241a076ddc6aa8&token=1786136540_3cb5ab51b0f118943e96cf295b0a0280b011cd2e"
+      },
+      {
+        "trackNum": 4,
+        "title": "Top",
+        "trackId": 2478228009,
+        "duration": 220.573,
+        "audioUrl": "https://t4.bcbits.com/stream/32fb7c2decb94997b1814a9c1803ec7b/mp3-128/2478228009?p=0&ts=1786136540&t=67e78aa9e14632264b45408d3f27eeda6af00360&token=1786136540_613a8671c73e8dda6e6a267467eeed429334a8ad"
+      },
+      {
+        "trackNum": 5,
+        "title": "Never",
+        "trackId": 1341325637,
+        "duration": 250.737,
+        "audioUrl": "https://t4.bcbits.com/stream/1a21c6e6d2b1b41b919c38c073fa6508/mp3-128/1341325637?p=0&ts=1786136540&t=4462bae8dbfd26a6fdecf91d7e7fb4cc2fdbdacf&token=1786136540_07fa87aaebe86d40128d394416b870c615974478"
+      },
+      {
+        "trackNum": 6,
+        "title": "Forever",
+        "trackId": 4076715710,
+        "duration": 214.8,
+        "audioUrl": "https://t4.bcbits.com/stream/d20710abf0ace0561b223f16118c6881/mp3-128/4076715710?p=0&ts=1786136540&t=26ebcd4f22d733ebe2f6dfcc3377a964c60202bf&token=1786136540_0c71bd74055904005da769ff88383932a3c5092e"
+      }
+    ]
+  }
+]

@@ -20,6 +20,9 @@ dist/
 # Entornos
 *.env
 
+# Generado (se regenera en cada build/dev)
+src/data/generated/
+
 
 
 # Ficheros solo-workspace (no forman parte del sitio)

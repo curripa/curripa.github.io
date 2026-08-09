@@ -4,7 +4,7 @@ export interface Props {
   title?: string;
   description?: string;
 }
-const { title = "Curripa", description = "Sello discográfico DIY" } = Astro.props;
+const { title = "CURRIPA", description = "" } = Astro.props;
 ---
 <!DOCTYPE html>
 <html lang="es" class="dark-mode-init">
@@ -12,7 +12,8 @@ const { title = "Curripa", description = "Sello discográfico DIY" } = Astro.pro
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content={description} />
-    <link rel="icon" type="image/svg+xml" href="/recursos/SVG/LogoCurripa.svg?t=dark" />
+    <link rel="icon" type="image/svg+xml" href="/recursos/SVG/LogoCurripa-negro.svg" media="(prefers-color-scheme: light)" />
+    <link rel="icon" type="image/svg+xml" href="/recursos/SVG/LogoCurripa.svg" media="(prefers-color-scheme: dark)" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <title>{title}</title>
@@ -30,16 +31,6 @@ const { title = "Curripa", description = "Sello discográfico DIY" } = Astro.pro
       document.documentElement.lang = lang;
       document.documentElement.classList.toggle("lang-en", lang === "en");
       document.documentElement.classList.toggle("lang-es", lang !== "en");
-
-      const fav = document.querySelector('link[rel="icon"]');
-      if (fav) {
-        fav.setAttribute(
-          "href",
-          document.documentElement.classList.contains("dark")
-            ? "/recursos/SVG/LogoCurripa.svg?t=dark"
-            : "/recursos/SVG/LogoCurripa-negro.svg?t=light"
-        );
-      }
     </script>
     <script>
       import "../i18n/init.js";
@@ -62,12 +53,6 @@ const { title = "Curripa", description = "Sello discográfico DIY" } = Astro.pro
       document.getElementById("theme-toggle")?.addEventListener("click", () => {
         const isDark = document.documentElement.classList.toggle("dark");
         localStorage.setItem("dark", isDark);
-        document.querySelector('link[rel="icon"]')?.setAttribute(
-          "href",
-          isDark
-            ? "/recursos/SVG/LogoCurripa.svg?t=dark"
-            : "/recursos/SVG/LogoCurripa-negro.svg?t=light"
-        );
       });
     </script>
   </body>

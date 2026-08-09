@@ -3,7 +3,7 @@
     "albumId": "tormenta-de-mierda",
     "title": "Tormenta de mierda",
     "year": 2014,
-    "coverArt": "https://f4.bcbits.com/img/a4176965661_10.jpg",
+    "coverArt": "https://f4.bcbits.com/img/a0640731781_10.jpg",
     "bandcampUrl": "https://frayandofocicos.bandcamp.com/album/tormenta-de-mierda",
     "numericId": 1845046613,
     "tracks": [
@@ -12,28 +12,28 @@
         "title": "Tormenta de mierda",
         "trackId": 453900496,
         "duration": 88.8,
-        "audioUrl": "https://t4.bcbits.com/stream/cc7ecac77a42a01ec54182f38ddb31cb/mp3-128/453900496?p=0&ts=1786136542&t=b2330667b7d5ed084afa5f659c090a91222518cf&token=1786136542_be3dcf76d2ed4c849553b73fbf56697d5c8cef1a"
+        "audioUrl": "https://t4.bcbits.com/stream/cc7ecac77a42a01ec54182f38ddb31cb/mp3-128/453900496?p=0&ts=1786369452&t=64a33f1b0a5e2bb4b6dc40774cc06ce322979e7b&token=1786369452_3c16208bdf5e8a0c00c3081e0ca2e423954ea858"
       },
       {
         "trackNum": 2,
         "title": "Vicio",
         "trackId": 2083704345,
         "duration": 45.2609,
-        "audioUrl": "https://t4.bcbits.com/stream/63aec810480611ac92d34956b502fd5e/mp3-128/2083704345?p=0&ts=1786136542&t=3ca3e1045cca3502402c890b8d5e098e1e8387c9&token=1786136542_79302051b76ec133ed6728f3e326be8b49b4003a"
+        "audioUrl": "https://t4.bcbits.com/stream/63aec810480611ac92d34956b502fd5e/mp3-128/2083704345?p=0&ts=1786369452&t=29cecdd4d317765107350cd6297ca32f1ab461c6&token=1786369452_5529201298d3ed6a23775d5c004a4fb9c4d964e9"
       },
       {
         "trackNum": 3,
         "title": "33930",
         "trackId": 4129145597,
         "duration": 124.875,
-        "audioUrl": "https://t4.bcbits.com/stream/4d96e4109e78fd088ce78754805995a2/mp3-128/4129145597?p=0&ts=1786136542&t=30042422973d6d63f78e8a3d4210ae59dd62ba79&token=1786136542_82e7c56c22a151566c157abddd786b55576fa4cc"
+        "audioUrl": "https://t4.bcbits.com/stream/4d96e4109e78fd088ce78754805995a2/mp3-128/4129145597?p=0&ts=1786369452&t=761b68e0c1a43394008cea915aeb77eac1c7a84f&token=1786369452_a7a8d1796a60f2d951b77c6ae3c08d2607dfd207"
       },
       {
         "trackNum": 4,
         "title": "Mentirosa",
         "trackId": 1650313943,
         "duration": 57,
-        "audioUrl": "https://t4.bcbits.com/stream/f877af2599c7c29e8d21096459585f67/mp3-128/1650313943?p=0&ts=1786136542&t=976e28be3f10eb450974d952100a63147a4f5edf&token=1786136542_39d98b9707cd0e292dec319b050ff4c3b524cea4"
+        "audioUrl": "https://t4.bcbits.com/stream/f877af2599c7c29e8d21096459585f67/mp3-128/1650313943?p=0&ts=1786369452&t=113754fe7672afdf25fd17aaa35d1f7e9ee3c084&token=1786369452_9c4f7a1579263792331e2cf00f766ec916e19868"
       }
     ]
   }

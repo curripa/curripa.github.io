@@ -112,6 +112,10 @@ for (const file of bandFiles) {
               .replace(/&amp;/g, '&')
               .replace(/&#39;/g, "'");
             const tralbum = JSON.parse(raw);
+            if (tralbum.album_release_date) {
+              const parsed = new Date(tralbum.album_release_date);
+              if (!isNaN(parsed.getTime())) album.year = parsed.getFullYear();
+            }
             if (Array.isArray(tralbum.trackinfo)) {
               album.tracks = tralbum.trackinfo.map((t) => ({
                 trackNum: t.track_num || 0,

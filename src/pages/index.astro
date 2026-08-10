@@ -1,6 +1,7 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Splash from "../components/Splash.astro";
+import Footer from "../components/Footer.astro";
 import BandSection from "../components/BandSection.astro";
 import type { Band, Album } from "../types";
 
@@ -30,6 +31,7 @@ function getDiscography(bandId: string): Album[] {
       <BandSection band={band} albums={getDiscography(band.id)} />
     ))}
   </main>
+  <Footer />
 </BaseLayout>
 
 <script>

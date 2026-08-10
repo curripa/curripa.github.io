@@ -48,6 +48,9 @@ function getDiscography(bandId: string): Album[] {
     const backToTop = e.target.closest("[data-back-to-top]");
     if (backToTop) {
       window.scrollTo({ top: 0, behavior: "smooth" });
+      if (window.location.hash) {
+        history.replaceState(null, "", window.location.pathname + window.location.search);
+      }
       return;
     }
 

@@ -6,10 +6,11 @@
   "scripts": {
     "predev": "node scripts/fetch-bandcamp.mjs",
     "dev": "astro dev",
-    "prebuild": "node scripts/fetch-bandcamp.mjs",
+    "prebuild": "node scripts/fetch-bandcamp-download.mjs",
     "build": "astro build",
     "preview": "astro preview",
-    "fetch:bandcamp": "node scripts/fetch-bandcamp.mjs"
+    "fetch:bandcamp": "node scripts/fetch-bandcamp.mjs",
+    "fetch:bandcamp:download": "node scripts/fetch-bandcamp-download.mjs"
   },
   "dependencies": {
     "astro": "^4.16.0",

@@ -35,6 +35,8 @@ function getDiscography(bandId: string): Album[] {
 </BaseLayout>
 
 <script>
+  import player from "../scripts/player.js";
+
   function toggleHistory(el) {
     const collapsed = el.classList.toggle("collapsed");
     el.setAttribute("aria-expanded", String(!collapsed));
@@ -49,6 +51,11 @@ function getDiscography(bandId: string): Album[] {
 
     const backToTop = e.target.closest("[data-back-to-top]");
     if (backToTop) {
+      player.stop();
+      document.querySelectorAll("[data-band-section]").forEach((section) => {
+        section.querySelectorAll("[data-album-detail]").forEach((el) => el.classList.add("hidden"));
+        section.querySelector(".discography-view")?.classList.remove("hidden");
+      });
       window.scrollTo({ top: 0, behavior: "smooth" });
       if (window.location.hash) {
         history.replaceState(null, "", window.location.pathname + window.location.search);
@@ -68,6 +75,7 @@ function getDiscography(bandId: string): Album[] {
 
     const back = e.target.closest(".album-back-btn");
     if (back) {
+      player.stop();
       const section = back.closest("[data-band-section]");
       if (!section) return;
       section.querySelectorAll("[data-album-detail]").forEach((el) => el.classList.add("hidden"));

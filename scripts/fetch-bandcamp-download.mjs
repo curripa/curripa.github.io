@@ -5,10 +5,21 @@ import { fileURLToPath } from 'url';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const bandsDir = join(__dirname, '..', 'src', 'data', 'bands');
 const outputDir = join(__dirname, '..', 'src', 'data', 'generated', 'discography');
+const audioRoot = join(__dirname, '..', 'public', 'audio');
 
 mkdirSync(outputDir, { recursive: true });
 
-const bandFiles = readdirSync(bandsDir).filter(f => f.endsWith('.json'));
+function sanitizeSegment(value) {
+  return String(value)
+    .trim()
+    .replace(/[<>:"/\\|?*\x00-\x1F]/g, '-')
+    .replace(/\s+/g, '-')
+    .replace(/-+/g, '-')
+    .replace(/^-|-$/g, '')
+    .slice(0, 80) || 'track';
+}
+
+const bandFiles = readdirSync(bandsDir).filter((f) => f.endsWith('.json'));
 
 for (const file of bandFiles) {
   const band = JSON.parse(readFileSync(join(bandsDir, file), 'utf-8'));
@@ -22,7 +33,6 @@ for (const file of bandFiles) {
     const albums = [];
     const lyricsByTitle = {};
 
-    // 1) Try JSON-LD
     const ldScripts = html.matchAll(
       /<script[^>]*type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/gi
     );
@@ -57,7 +67,6 @@ for (const file of bandFiles) {
       } catch { /* skip */ }
     }
 
-    // 2) Fallback: scrape music-grid HTML
     if (albums.length === 0) {
       const itemRegex = /<a\s+href="(\/album\/[^"]+)"[^>]*>[\s\S]*?<img\s+src="([^"]+)"[^>]*>[\s\S]*?<p[^>]*class="title"[^>]*>([\s\S]*?)<\/p>/gi;
       let match;
@@ -78,14 +87,14 @@ for (const file of bandFiles) {
       }
     }
 
-    // Ensure bandcampUrl is always set
     for (const album of albums) {
       if (!album.bandcampUrl) {
         album.bandcampUrl = `${band.bandcampUrl}/album/${album.albumId}`;
       }
     }
 
-    // 3) Fetch each album page for numeric ID and year
+    const counters = { downloaded: 0, skipped: 0, failed: 0 };
+
     for (const album of albums) {
       if (album.numericId) continue;
       const url = album.bandcampUrl;
@@ -113,7 +122,6 @@ for (const file of bandFiles) {
         const ogImageMatch = pageHtml.match(/<meta property="og:image"\s+content="([^"]+)"/);
         if (ogImageMatch && !album.coverArt) album.coverArt = ogImageMatch[1];
 
-        // Extract track listing from data-tralbum JSON attribute
         const tralbumMatch = pageHtml.match(/data-tralbum="([^"]+)"/);
         if (tralbumMatch) {
           try {
@@ -127,14 +135,18 @@ for (const file of bandFiles) {
               if (!isNaN(parsed.getTime())) album.year = parsed.getFullYear();
             }
             if (Array.isArray(tralbum.trackinfo)) {
-              album.tracks = tralbum.trackinfo.map((t) => ({
-                trackNum: t.track_num || 0,
-                title: t.title || 'Untitled',
-                trackId: t.track_id || null,
-                duration: t.duration || null,
-                audioUrl: pickAudioUrl(t.file),
-                lyrics: lyricsByTitle[t.title] || null,
-              }));
+              for (const t of tralbum.trackinfo) {
+                const track = {
+                  trackNum: t.track_num || 0,
+                  title: t.title || 'Untitled',
+                  trackId: t.track_id || null,
+                  duration: t.duration || null,
+                  audioUrl: pickAudioUrl(t.file),
+                  lyrics: lyricsByTitle[t.title] || null,
+                };
+                await downloadTrack(band.id, album, track, counters);
+                album.tracks.push(track);
+              }
             }
           } catch { /* skip invalid JSON */ }
         }
@@ -144,7 +156,7 @@ for (const file of bandFiles) {
     }
 
     writeFileSync(cachePath, JSON.stringify(albums, null, 2) + '\n');
-    console.log(`  → ${albums.length} album(s) cached`);
+    console.log(`  → ${albums.length} album(s) cached (${counters.downloaded} down, ${counters.skipped} skip, ${counters.failed} fail)`);
   } catch (err) {
     console.warn(`  ✗ Failed: ${err.message}`);
     if (!existsSync(cachePath)) {
@@ -153,6 +165,36 @@ for (const file of bandFiles) {
     } else {
       console.warn(`  → Preserved existing cache`);
     }
+  }
+}
+
+async function downloadTrack(bandId, album, track, counters) {
+  const audioUrl = track.audioUrl;
+  if (!audioUrl || !/\.bcbits\.com\//.test(audioUrl)) return;
+
+  const albumId = album.albumId || '';
+  const fileName = `${track.trackNum ?? 0}-${sanitizeSegment(track.title)}.mp3`;
+  const absPath = join(audioRoot, bandId, albumId, fileName);
+  const localUrl = `/audio/${bandId}/${albumId}/${fileName}`;
+
+  if (existsSync(absPath)) {
+    counters.skipped++;
+    track.audioUrl = localUrl;
+    return;
+  }
+
+  try {
+    const res = await fetch(audioUrl, { signal: AbortSignal.timeout(60000) });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const buffer = Buffer.from(await res.arrayBuffer());
+    mkdirSync(dirname(absPath), { recursive: true });
+    writeFileSync(absPath, buffer);
+    track.audioUrl = localUrl;
+    counters.downloaded++;
+    console.log(`  ↓ ${bandId}/${albumId}/${fileName} (${(buffer.length / 1024).toFixed(0)} KiB)`);
+  } catch (err) {
+    counters.failed++;
+    console.warn(`  ✗ Could not download "${track.title}" (${bandId}/${albumId}): ${err.message}`);
   }
 }
 

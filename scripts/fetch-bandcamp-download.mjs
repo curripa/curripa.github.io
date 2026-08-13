@@ -6,6 +6,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const bandsDir = join(__dirname, '..', 'src', 'data', 'bands');
 const outputDir = join(__dirname, '..', 'src', 'data', 'generated', 'discography');
 const audioRoot = join(__dirname, '..', 'public', 'audio');
+const coverRoot = join(__dirname, '..', 'public', 'img', 'covers');
 
 mkdirSync(outputDir, { recursive: true });
 
@@ -93,7 +94,10 @@ for (const file of bandFiles) {
       }
     }
 
-    const counters = { downloaded: 0, skipped: 0, failed: 0 };
+    const counters = {
+      downloaded: 0, skipped: 0, failed: 0,
+      covers: { downloaded: 0, skipped: 0, failed: 0 },
+    };
 
     for (const album of albums) {
       if (album.numericId) continue;
@@ -150,13 +154,15 @@ for (const file of bandFiles) {
             }
           } catch { /* skip invalid JSON */ }
         }
+
+        await downloadCover(band.id, album, counters);
       } catch (err) {
         console.warn(`  ↪ Could not fetch detail for "${album.title}": ${err.message}`);
       }
     }
 
     writeFileSync(cachePath, JSON.stringify(albums, null, 2) + '\n');
-    console.log(`  → ${albums.length} album(s) cached (${counters.downloaded} down, ${counters.skipped} skip, ${counters.failed} fail)`);
+    console.log(`  → ${albums.length} album(s) cached (${counters.downloaded} down, ${counters.skipped} skip, ${counters.failed} fail, covers ${counters.covers.downloaded}/${counters.covers.skipped}/${counters.covers.failed})`);
   } catch (err) {
     console.warn(`  ✗ Failed: ${err.message}`);
     if (!existsSync(cachePath)) {
@@ -195,6 +201,47 @@ async function downloadTrack(bandId, album, track, counters) {
   } catch (err) {
     counters.failed++;
     console.warn(`  ✗ Could not download "${track.title}" (${bandId}/${albumId}): ${err.message}`);
+  }
+}
+
+async function downloadCover(bandId, album, counters) {
+  const coverUrl = album.coverArt;
+  if (!coverUrl || !/\.bcbits\.com\//.test(coverUrl)) return;
+
+  const albumId = album.albumId || '';
+  if (!albumId) return;
+
+  const ext = (() => {
+    try {
+      const m = new URL(coverUrl).pathname.match(/\.[a-z0-9]+$/i);
+      return m ? m[0] : '.jpg';
+    } catch {
+      return '.jpg';
+    }
+  })();
+
+  const fileName = `${albumId}${ext}`;
+  const absPath = join(coverRoot, bandId, fileName);
+  const localUrl = `/img/covers/${bandId}/${fileName}`;
+
+  if (existsSync(absPath)) {
+    counters.covers.skipped++;
+    album.coverArt = localUrl;
+    return;
+  }
+
+  try {
+    const res = await fetch(coverUrl, { signal: AbortSignal.timeout(30000) });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const buffer = Buffer.from(await res.arrayBuffer());
+    mkdirSync(dirname(absPath), { recursive: true });
+    writeFileSync(absPath, buffer);
+    album.coverArt = localUrl;
+    counters.covers.downloaded++;
+    console.log(`  ↓ cover ${bandId}/${fileName} (${(buffer.length / 1024).toFixed(0)} KiB)`);
+  } catch (err) {
+    counters.covers.failed++;
+    console.warn(`  ✗ Could not download cover "${album.title}" (${bandId}/${albumId}): ${err.message}`);
   }
 }
 

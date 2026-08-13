@@ -5,8 +5,8 @@
   "description": "Death metal melódico",
   "history": "Kimen es un grupo activo desde 2013, de estilo death metal melódico con influencias de Sound of Silence, Tragic Vision, The Black Dahlia Murder, At the Gates, Caliban, DevilDriver, As Hope Dies, As Blood Runs Black y Mechanism.",
   "bandcampUrl": "https://kimen.bandcamp.com",
-  "logoSvg": "/recursos/SVG/Kimen.svg",
-  "logoSvgNegro": "/recursos/SVG/Kimen-negro.svg",
+  "logoSvg": "/SVG/Kimen.svg",
+  "logoSvgNegro": "/SVG/Kimen-negro.svg",
   "historyEn": "Kimen is a band active since 2013, of melodic death metal style with influences of Sound of Silence, Tragic Vision, The Black Dahlia Murder, At the Gates, Caliban, DevilDriver, As Hope Dies, As Blood Runs Black and Mechanism.",
   "descriptionEn": "Melodic death metal"
 }

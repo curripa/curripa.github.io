@@ -1,12 +1,12 @@
 <p align="center">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="public/recursos/SVG/LogoCurripa.svg" />
-    <img src="public/recursos/SVG/LogoCurripa-negro.svg" alt="Logo Curripa" height="120" />
+    <source media="(prefers-color-scheme: dark)" srcset="public/SVG/LogoCurripa.svg" />
+    <img src="public/SVG/LogoCurripa-negro.svg" alt="Logo Curripa" height="120" />
   </picture>
   <br />
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="public/recursos/SVG/Curripa.svg" />
-    <img src="public/recursos/SVG/Curripa-negro.svg" alt="Curripa" height="60" />
+    <source media="(prefers-color-scheme: dark)" srcset="public/SVG/Curripa.svg" />
+    <img src="public/SVG/Curripa-negro.svg" alt="Curripa" height="60" />
   </picture>
 </p>
 
@@ -44,7 +44,7 @@
 ├── scripts/
 │   └── fetch-bandcamp.mjs         # Bandcamp scraper → discography JSON
 ├── public/
-│   └── recursos/SVG/              # Logos (light and dark variant per band)
+│   └── SVG/                       # Logos (light and dark variant per band)
 └── src/
     ├── components/                # Splash, BandSection, Discography, AlbumCard,
     │   │                          # AlbumDetail, BandcampEmbed, ScrollReveal
@@ -83,7 +83,7 @@ Generated files (`src/data/generated/`) are recalculated on every deploy and sho
 ### Adding a band
 
 1. Create `src/data/bands/<id>.json` following the structure of the existing files (`id`, `name`, `yearsActive`, `description`, `history`, `historyEn`, `bandcampUrl`, `logoSvg`, `logoSvgNegro`).
-2. Add the logos to `public/recursos/SVG/` (light and dark variant).
+2. Add the logos to `public/SVG/` (light and dark variant).
 3. Run `npm run fetch:bandcamp` to generate its discography.
 
 ## Internationalization

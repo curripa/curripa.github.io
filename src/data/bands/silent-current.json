@@ -5,8 +5,8 @@
   "description": "Rock alternativo",
   "history": "Silent Current fue un grupo activo en 2017, de estilo rock alternativo con influencias de Incubus, Audioslave, Three Doors Down, Audioevent y Foo Fighters.",
   "bandcampUrl": "https://silentcurrent.bandcamp.com",
-  "logoSvg": "/recursos/SVG/SilentCurrent.svg",
-  "logoSvgNegro": "/recursos/SVG/SilentCurrent-negro.svg",
+  "logoSvg": "/SVG/SilentCurrent.svg",
+  "logoSvgNegro": "/SVG/SilentCurrent-negro.svg",
   "historyEn": "Silent Current was a band active in 2017, of alternative rock style with influences of Incubus, Audioslave, Three Doors Down and Audioevent.",
   "descriptionEn": "Alternative rock"
 }

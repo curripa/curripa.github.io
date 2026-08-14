@@ -204,9 +204,14 @@ async function downloadTrack(bandId, album, track, counters) {
   }
 }
 
+const normalizeCoverSize = (url) =>
+  url.replace(/_\d+(\.\w+)$/, '_10$1');
+
 async function downloadCover(bandId, album, counters) {
-  const coverUrl = album.coverArt;
-  if (!coverUrl || !/\.bcbits\.com\//.test(coverUrl)) return;
+  if (!album.coverArt) return;
+  const coverUrl = normalizeCoverSize(album.coverArt);
+  if (!/\.bcbits\.com\//.test(coverUrl)) return;
+  album.coverArt = coverUrl;
 
   const albumId = album.albumId || '';
   if (!albumId) return;

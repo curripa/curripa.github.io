@@ -10,6 +10,9 @@ const coverRoot = join(__dirname, '..', 'public', 'img', 'covers');
 
 mkdirSync(outputDir, { recursive: true });
 
+const normalizeCoverSize = (url) =>
+  url.replace(/_\d+(\.\w+)$/, '_10$1');
+
 function sanitizeSegment(value) {
   return String(value)
     .trim()
@@ -92,6 +95,7 @@ for (const file of bandFiles) {
       if (!album.bandcampUrl) {
         album.bandcampUrl = `${band.bandcampUrl}/album/${album.albumId}`;
       }
+      if (album.coverArt) album.coverArt = normalizeCoverSize(album.coverArt);
     }
 
     const counters = {
@@ -203,9 +207,6 @@ async function downloadTrack(bandId, album, track, counters) {
     console.warn(`  ✗ Could not download "${track.title}" (${bandId}/${albumId}): ${err.message}`);
   }
 }
-
-const normalizeCoverSize = (url) =>
-  url.replace(/_\d+(\.\w+)$/, '_10$1');
 
 async function downloadCover(bandId, album, counters) {
   if (!album.coverArt) return;

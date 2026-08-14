@@ -8,6 +8,9 @@ const outputDir = join(__dirname, '..', 'src', 'data', 'generated', 'discography
 
 mkdirSync(outputDir, { recursive: true });
 
+const normalizeCoverSize = (url) =>
+  url.replace(/_\d+(\.\w+)$/, '_10$1');
+
 const bandFiles = readdirSync(bandsDir).filter(f => f.endsWith('.json'));
 
 for (const file of bandFiles) {
@@ -83,6 +86,7 @@ for (const file of bandFiles) {
       if (!album.bandcampUrl) {
         album.bandcampUrl = `${band.bandcampUrl}/album/${album.albumId}`;
       }
+      if (album.coverArt) album.coverArt = normalizeCoverSize(album.coverArt);
     }
 
     // 3) Fetch each album page for numeric ID and year

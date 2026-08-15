@@ -21,7 +21,7 @@ const { band, albums } = Astro.props;
       tabindex="0"
       role="button"
       aria-expanded="false"
-      class="mt-6 text-lg leading-relaxed cursor-pointer collapsed hover:underline underline-offset-4 decoration-current"
+      class="mt-6 text-lg leading-relaxed collapsed"
     >
       <span data-lang="es">{band.history}</span>
       {band.historyEn && <span data-lang="en">{band.historyEn}</span>}

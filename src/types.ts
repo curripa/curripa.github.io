@@ -16,12 +16,14 @@ export interface Track {
   trackId: number | null;
   duration: number | null;
   audioUrl: string | null;
+  lyrics: string | null;
 }
 
 export interface Album {
   albumId: string;
   title: string;
   year: number | null;
+  releaseDate: string | null;
   coverArt: string | null;
   bandcampUrl: string;
   numericId?: number | null;

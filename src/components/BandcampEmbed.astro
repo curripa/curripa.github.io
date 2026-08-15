@@ -62,15 +62,42 @@ const formatDuration = (s: number | null): string => {
         </div>
         <div class="track-list space-y-1">
           {album.tracks.map((track) => (
-            <div class="track-row flex items-center gap-1 md:gap-2 px-2 py-1 rounded hover:bg-black/5 dark:hover:bg-white/5 transition-colors">
-              <span class="opacity-40 w-6 text-right shrink-0 tabular-nums">{track.trackNum}</span>
-              <button
-                class="track-play-btn w-6 h-6 shrink-0 flex items-center justify-center text-xs hover:opacity-60 transition-opacity"
-                data-audio-url={track.audioUrl}
-                aria-label={"Reproducir " + track.title}
-              >▶</button>
-              <span class="flex-1 truncate">{track.title.replace(/^[^-]+ - /, "")}</span>
-              <span class="opacity-40 tabular-nums shrink-0 mr-1">{formatDuration(track.duration)}</span>
+            <div class="track-item">
+              <div class="track-row grid grid-cols-[1fr_auto_1fr] items-center gap-1 md:gap-2 px-2 py-1 rounded hover:bg-black/5 dark:hover:bg-white/5 transition-colors">
+                <div class="flex items-center gap-1 md:gap-2 min-w-0">
+                  <span class="opacity-40 w-6 text-right shrink-0 tabular-nums">{track.trackNum}</span>
+                  <button
+                    class="track-play-btn w-6 h-6 shrink-0 flex items-center justify-center text-xs hover:opacity-60 transition-opacity"
+                    data-audio-url={track.audioUrl}
+                    aria-label={"Reproducir " + track.title}
+                  >▶</button>
+                  <span
+                    class="flex-1 min-w-0 collapsed"
+                    data-track-title
+                    role="button"
+                    tabindex="0"
+                    aria-expanded="false"
+                  >{track.title.replace(/^[^-]+ - /, "")}</span>
+                </div>
+                <span class="justify-self-center">
+                  {track.lyrics && (
+                    <button
+                      type="button"
+                      class="track-lyrics-btn text-[10px] uppercase tracking-widest opacity-50 underline underline-offset-4 decoration-current hover:opacity-100 transition-opacity cursor-pointer"
+                      aria-expanded="false"
+                      aria-controls={`lyrics-${album.albumId}-${track.trackNum}`}
+                      data-i18n="track.lyrics"
+                    >Letras</button>
+                  )}
+                </span>
+                <span class="opacity-40 tabular-nums shrink-0 justify-self-end mr-1">{formatDuration(track.duration)}</span>
+              </div>
+              {track.lyrics && (
+                <div
+                  id={`lyrics-${album.albumId}-${track.trackNum}`}
+                  class="track-lyrics hidden whitespace-pre-line text-sm leading-relaxed opacity-70 ml-8 md:ml-10 px-2 pb-3 border-l-2 border-black/20 dark:border-white/20 pl-4"
+                >{track.lyrics}</div>
+              )}
             </div>
           ))}
         </div>
@@ -140,6 +167,9 @@ const formatDuration = (s: number | null): string => {
 
 <script>
   import player from "../scripts/player.js";
+  import { initTruncatable } from "../scripts/truncate.js";
+
+  initTruncatable("[data-track-title]", "x");
 
   document.querySelectorAll(".player-wrap").forEach((wrap) => {
     const controls = wrap.querySelector(".player-controls");
@@ -152,6 +182,29 @@ const formatDuration = (s: number | null): string => {
     const volumePop = controls?.querySelector(".ctrl-volume-pop");
     const volumeInput = controls?.querySelector(".ctrl-volume");
     const rows = wrap.querySelectorAll(".track-row");
+
+    wrap.querySelectorAll("[data-track-title]").forEach((titleEl) => {
+      const toggle = () => {
+        const collapsed = titleEl.classList.toggle("collapsed");
+        titleEl.setAttribute("aria-expanded", String(!collapsed));
+      };
+      titleEl.addEventListener("click", toggle);
+      titleEl.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          toggle();
+        }
+      });
+    });
+
+    wrap.querySelectorAll(".track-lyrics-btn").forEach((btn) => {
+      const block = document.getElementById(btn.getAttribute("aria-controls"));
+      if (!block) return;
+      btn.addEventListener("click", () => {
+        const open = block.classList.toggle("hidden");
+        btn.setAttribute("aria-expanded", String(!open));
+      });
+    });
 
     const tracks = Array.from(rows).map((row) => ({
       audioUrl: row.querySelector(".track-play-btn")?.dataset.audioUrl,

@@ -36,6 +36,9 @@ function getDiscography(bandId: string): Album[] {
 
 <script>
   import player from "../scripts/player.js";
+  import { initTruncatable } from "../scripts/truncate.js";
+
+  initTruncatable("[data-band-history]", "y");
 
   function toggleHistory(el) {
     const collapsed = el.classList.toggle("collapsed");

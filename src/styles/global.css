@@ -53,12 +53,39 @@
   transform: translateY(0);
 }
 
-/* Collapsed band history: clamp to two lines with ellipsis */
+/* Collapsed band history: clamp to two lines with ellipsis.
+   Only elements detected as overflowing (class `truncatable` set by
+   src/scripts/truncate.js) get the expand affordance. */
 [data-band-history].collapsed {
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
+}
+
+[data-band-history].collapsed.truncatable {
+  cursor: pointer;
+}
+
+[data-band-history].collapsed.truncatable:hover {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+/* Collapsed track title: truncate with ellipsis; expand on click */
+[data-track-title].collapsed {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+[data-track-title].collapsed.truncatable {
+  cursor: pointer;
+}
+
+[data-track-title].collapsed.truncatable:hover {
+  text-decoration: underline;
+  text-underline-offset: 4px;
 }
 
 /* Bilingual band history: only the active language is visible.

@@ -13,6 +13,13 @@ mkdirSync(outputDir, { recursive: true });
 const normalizeCoverSize = (url) =>
   url.replace(/_\d+(\.\w+)$/, '_10$1');
 
+const normalizeDate = (value) => {
+  if (!value) return null;
+  if (/^\d{4}-\d{2}-\d{2}/.test(value)) return value.slice(0, 10);
+  const parsed = new Date(value);
+  return isNaN(parsed.getTime()) ? null : parsed.toISOString().slice(0, 10);
+};
+
 function sanitizeSegment(value) {
   return String(value)
     .trim()
@@ -52,6 +59,7 @@ for (const file of bandFiles) {
               year: item.datePublished
                 ? new Date(item.datePublished).getFullYear()
                 : null,
+              releaseDate: normalizeDate(item.datePublished) || null,
               coverArt: item.image || null,
               bandcampUrl: item.url || null,
               numericId: null,
@@ -83,6 +91,7 @@ for (const file of bandFiles) {
           albumId: extractAlbumId(href),
           title,
           year: null,
+          releaseDate: null,
           coverArt,
           bandcampUrl,
           numericId: null,
@@ -122,10 +131,14 @@ for (const file of bandFiles) {
         if (releaseMatch) {
           const parsed = new Date(releaseMatch[1]);
           if (!isNaN(parsed.getTime())) album.year = parsed.getFullYear();
+          album.releaseDate = normalizeDate(releaseMatch[1]) || album.releaseDate;
         }
 
-        const metaDateMatch = pageHtml.match(/<meta property="music:release_date"\s+content="(\d{4})/);
-        if (metaDateMatch) album.year = parseInt(metaDateMatch[1]);
+        const metaDateMatch = pageHtml.match(/<meta property="music:release_date"\s+content="(\d{4})-(\d{2}-\d{2})"/);
+        if (metaDateMatch) {
+          album.year = parseInt(metaDateMatch[1]);
+          album.releaseDate = `${metaDateMatch[1]}-${metaDateMatch[2]}`;
+        }
 
         const ogImageMatch = pageHtml.match(/<meta property="og:image"\s+content="([^"]+)"/);
         if (ogImageMatch && !album.coverArt) album.coverArt = ogImageMatch[1];
@@ -141,6 +154,7 @@ for (const file of bandFiles) {
             if (tralbum.album_release_date) {
               const parsed = new Date(tralbum.album_release_date);
               if (!isNaN(parsed.getTime())) album.year = parsed.getFullYear();
+              album.releaseDate = normalizeDate(tralbum.album_release_date) || album.releaseDate;
             }
             if (Array.isArray(tralbum.trackinfo)) {
               for (const t of tralbum.trackinfo) {

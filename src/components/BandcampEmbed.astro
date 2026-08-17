@@ -31,7 +31,7 @@ const formatDuration = (s: number | null): string => {
     </div>
     {album.tracks.length > 0 && (
       <div class="player-wrap" data-tracks={album.albumId}>
-        <div class="player-controls flex items-center gap-1 md:gap-2 mb-3 p-2 w-full min-w-0 bg-black/5 dark:bg-white/5 rounded">
+        <div class="player-controls flex items-center gap-1 md:gap-2 mb-3 p-2 w-full min-w-0 bg-black/5 dark:bg-white/5 rounded flex-wrap">
           <button class="ctrl-prev w-8 h-8 shrink-0 flex items-center justify-center border border-current text-sm hover:bg-ink hover:text-paper dark:hover:bg-paper dark:hover:text-ink transition-colors">⏮</button>
           <button class="ctrl-play w-8 h-8 shrink-0 flex items-center justify-center border border-current text-sm hover:bg-ink hover:text-paper dark:hover:bg-paper dark:hover:text-ink transition-colors">▶</button>
           <button class="ctrl-next w-8 h-8 shrink-0 flex items-center justify-center border border-current text-sm hover:bg-ink hover:text-paper dark:hover:bg-paper dark:hover:text-ink transition-colors">⏭</button>
@@ -57,8 +57,19 @@ const formatDuration = (s: number | null): string => {
               />
             </div>
           </div>
-          <span class="ctrl-label text-sm truncate flex-1 ml-2 opacity-80"></span>
-<span class="ctrl-time text-sm tabular-nums opacity-60 shrink-0 ml-2"></span>
+          <span class="ctrl-label text-sm truncate ml-2 opacity-80 flex-1 min-w-0 md:flex-grow-0 md:basis-auto"></span>
+          <div class="ctrl-progress-wrap order-last basis-full min-w-0 flex items-center my-2 md:my-0 md:order-none md:basis-auto md:flex-1 md:ml-2">
+            <input
+              class="ctrl-progress-range w-full"
+              type="range"
+              min="0"
+              max="1000"
+              step="1"
+              value="0"
+              aria-label="Progreso de la canción"
+            />
+          </div>
+          <span class="ctrl-time text-sm tabular-nums opacity-60 shrink-0 ml-2"></span>
         </div>
         <div class="track-list space-y-1">
           {album.tracks.map((track) => (
@@ -163,6 +174,51 @@ const formatDuration = (s: number | null): string => {
     background: var(--vthumb, #f5f0e8);
     border-color: var(--vthumb-border, #1a1a1a);
   }
+  .ctrl-progress-range {
+    -webkit-appearance: none;
+    appearance: none;
+    height: 4px;
+    border-radius: 9999px;
+    background: currentColor;
+    opacity: 0.7;
+    cursor: pointer;
+    outline: none;
+  }
+  .ctrl-progress-range::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 14px;
+    height: 14px;
+    border-radius: 9999px;
+    background: var(--vthumb, #1a1a1a);
+    border: 2px solid var(--vthumb-border, #f5f0e8);
+    box-sizing: border-box;
+    cursor: grab;
+  }
+  .ctrl-progress-range::-moz-range-thumb {
+    width: 14px;
+    height: 14px;
+    border-radius: 9999px;
+    background: var(--vthumb, #1a1a1a);
+    border: 2px solid var(--vthumb-border, #f5f0e8);
+    box-sizing: border-box;
+    cursor: grab;
+  }
+  .ctrl-progress-range:hover {
+    opacity: 1;
+  }
+  .ctrl-progress-range:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 3px;
+  }
+  .dark .ctrl-progress-range::-webkit-slider-thumb {
+    background: var(--vthumb, #f5f0e8);
+    border-color: var(--vthumb-border, #1a1a1a);
+  }
+  .dark .ctrl-progress-range::-moz-range-thumb {
+    background: var(--vthumb, #f5f0e8);
+    border-color: var(--vthumb-border, #1a1a1a);
+  }
 </style>
 
 <script>
@@ -178,6 +234,8 @@ const formatDuration = (s: number | null): string => {
     const nextBtn = controls?.querySelector(".ctrl-next");
     const nowLabel = controls?.querySelector(".ctrl-label");
     const timeLabel = controls?.querySelector(".ctrl-time");
+    const progressWrap = controls?.querySelector(".ctrl-progress-wrap");
+    const rangeInput = controls?.querySelector(".ctrl-progress-range");
     const volumeBtn = controls?.querySelector(".ctrl-volume-btn");
     const volumePop = controls?.querySelector(".ctrl-volume-pop");
     const volumeInput = controls?.querySelector(".ctrl-volume");
@@ -230,6 +288,7 @@ const formatDuration = (s: number | null): string => {
       const isThisAlbum = st.track && tracks.some((t) => t.audioUrl === st.track.audioUrl);
       activeAlbum = !!isThisAlbum;
       if (timeLabel) timeLabel.classList.toggle("hidden", !activeAlbum);
+      if (progressWrap) progressWrap.classList.toggle("hidden", !activeAlbum);
 
       if (isThisAlbum) {
         if (nowLabel) nowLabel.textContent = st.track.title.replace(/^[^-]+ - /, "");
@@ -274,6 +333,15 @@ const formatDuration = (s: number | null): string => {
     });
     nextBtn?.addEventListener("click", () => player.next());
 
+    if (rangeInput) {
+      rangeInput.addEventListener("input", () => {
+        const audio = player.getAudio();
+        const d = audio.duration || 0;
+        const max = Number(rangeInput.max);
+        if (d > 0 && max > 0) player.seek((Number(rangeInput.value) / max) * d);
+      });
+    }
+
     if (volumeInput && volumePop && volumeBtn) {
       volumeInput.value = String(player.getState().volume);
       volumeInput.addEventListener("input", () => player.setVolume(volumeInput.value));
@@ -300,6 +368,14 @@ const formatDuration = (s: number | null): string => {
     document.addEventListener("player:timeupdate", (e) => {
       const cur = e.detail.currentTime;
       if (timeLabel && activeAlbum && cur > 0) timeLabel.textContent = fmt(cur);
+      if (rangeInput && activeAlbum) {
+        const dur = e.detail.duration;
+        if (dur > 0) {
+          const maxMs = Math.round(dur * 1000);
+          if (Number(rangeInput.max) !== maxMs) rangeInput.max = String(maxMs);
+          rangeInput.value = String(Math.min(maxMs, Math.round(cur * 1000)));
+        }
+      }
     });
     document.addEventListener("player:error", () => {
       if (nowLabel) {

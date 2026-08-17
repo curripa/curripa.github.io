@@ -117,6 +117,26 @@ const player = {
     this._dispatch();
   },
 
+  seek(time) {
+    if (!this.audio || !this.currentTrack) return;
+    const duration = this.audio.duration;
+    if (!Number.isFinite(duration) || duration <= 0) return;
+    const t = Math.min(duration, Math.max(0, Number(time)));
+    if (!Number.isFinite(t)) return;
+    this.audio.currentTime = t;
+    document.dispatchEvent(new CustomEvent('player:timeupdate', {
+      detail: {
+        currentTime: t,
+        duration: this.audio.duration || 0,
+      }
+    }));
+  },
+
+  getAudio() {
+    this.init();
+    return this.audio;
+  },
+
   getState() {
     return {
       track: this.currentTrack,

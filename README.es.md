@@ -20,7 +20,7 @@
 
 - **Página única tipo fanzine**: splash con el logo, tagline y el listado de grupos; el scroll recorre cada proyecto en orden cronológico.
 - **Sección por grupo**: logo, años de actividad, historia (expandible) y rejilla de su discografía.
-- **Reproductor integrado**: cada álbum abre una vista con el listado de canciones y un reproductor de audio (anterior/play/siguiente, volumen y tiempo) usando los streams públicos de Bandcamp.
+- **Reproductor integrado**: cada álbum abre una vista con el listado de canciones y un reproductor de audio (anterior/play/siguiente, volumen y tiempo) usando el audio de las canciones descargado localmente en el build.
 - **Lightbox**: las portadas se amplían al hacer clic.
 - **Bilingüe (es/en)**: el idioma se detecta desde el navegador (español por defecto).
 - **Tema claro/oscuro** con persistencia en `localStorage`.
@@ -42,12 +42,15 @@
 ├── tailwind.config.cjs
 ├── package.json
 ├── scripts/
-│   └── fetch-bandcamp.mjs         # Scraper de Bandcamp → JSON de discografía
+│   ├── fetch-bandcamp.mjs         # Scraper de Bandcamp → JSON de discografía (URLs remotas)
+│   └── fetch-bandcamp-download.mjs# Scraper → también descarga audio y portadas localmente
 ├── public/
-│   └── SVG/                       # Logos (versión clara y oscura por grupo)
+│   ├── SVG/                       # Logos (versión clara y oscura por grupo)
+│   ├── audio/                     # MP3 descargados (generados, una carpeta por grupo)
+│   └── img/                       # Portadas de Bandcamp (generadas)
 └── src/
     ├── components/                # Splash, BandSection, Discography, AlbumCard,
-    │   │                          # AlbumDetail, BandcampEmbed, ScrollReveal
+    │   │                          # AlbumDetail, BandcampEmbed, ScrollReveal, Footer
     ├── data/
     │   ├── bands/                 # Metadatos de cada grupo (uno por JSON)
     │   └── generated/discography/ # Discografía generada desde Bandcamp (no editar)
@@ -55,6 +58,7 @@
     ├── layouts/BaseLayout.astro
     ├── pages/index.astro          # Página única
     ├── scripts/player.js          # Reproductor de audio
+    ├── scripts/truncate.js        # Truncado de texto
     ├── styles/global.css
     └── types.ts                   # Tipos Band, Album, Track
 ```
@@ -74,11 +78,14 @@ npm run preview    # sirve el build localmente
 
 La discografía no se mantiene a mano: se obtiene rascando las páginas públicas de Bandcamp de cada grupo. Los datos de los grupos (nombre, estilo, historia, URL de Bandcamp) están en `src/data/bands/*.json`; a partir de ellos el script genera la discografía en `src/data/generated/discography/`.
 
+Hay dos scripts disponibles:
+
 ```bash
-npm run fetch:bandcamp   # actualiza la discografía desde Bandcamp
+npm run fetch:bandcamp           # actualiza la discografía (las canciones mantienen las URLs remotas de Bandcamp)
+npm run fetch:bandcamp:download  # además descarga cada canción (public/audio/) y las portadas (public/img/covers/) localmente
 ```
 
-Los archivos generados (`src/data/generated/`) se recalculan en cada despliegue y no deberían editarse a mano.
+`public/audio/` y `public/img/covers/` los genera el script de descarga y no deberían editarse a mano. `npm run build` ejecuta la variante de descarga automáticamente mediante su hook `prebuild`; los archivos generados (`src/data/generated/`) se recalculan en cada despliegue.
 
 ### Añadir un grupo
 
@@ -96,12 +103,11 @@ La web se genera en español y se adapta al inglés según el idioma del navegad
 
 ## Despliegue
 
-El flujo `.github/workflows/deploy.yml` se encarga de todo en cada push (y diariamente a las 06:00 UTC para refrescar la discografía):
+El flujo `.github/workflows/deploy.yml` se encarga de todo en cada push a `main` (y se puede lanzar manualmente desde *Actions*):
 
-1. Instala dependencias.
-2. Ejecuta `npm run fetch:bandcamp` (obtiene la discografía actualizada).
-3. Compila el sitio.
-4. Publica `dist/` en **GitHub Pages**.
+1. Instala dependencias y ejecuta el hook `prebuild`, que obtiene la discografía y descarga el audio y las portadas.
+2. Compila el sitio.
+3. Publica `dist/` en **GitHub Pages**.
 
 Para activarlo en un repositorio:
 

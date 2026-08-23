@@ -1,9 +1,10 @@
 ---
-import type { Album } from "../types";
+import type { Album, Band } from "../types";
 export interface Props {
   album: Album;
+  band: Band;
 }
-const { album } = Astro.props;
+const { album, band } = Astro.props;
 const formatDuration = (s: number | null): string => {
   if (!s) return "--:--";
   const m = Math.floor(s / 60);
@@ -35,7 +36,7 @@ const formatDate = (d: string | null): string => {
       )}
     </div>
     {album.tracks.length > 0 && (
-      <div class="player-wrap" data-tracks={album.albumId}>
+      <div class="player-wrap" data-tracks={album.albumId} data-band-name={band.name} data-band-id={band.id} data-album-title={album.title} data-album-cover={album.coverArt ?? ""}>
         <div class="player-controls flex items-center gap-1 md:gap-2 mb-3 p-2 w-full min-w-0 bg-black/5 dark:bg-white/5 rounded flex-wrap">
           <button class="ctrl-prev w-8 h-8 shrink-0 flex items-center justify-center border border-current text-sm hover:bg-ink hover:text-paper dark:hover:bg-paper dark:hover:text-ink transition-colors">⏮</button>
           <button class="ctrl-play w-8 h-8 shrink-0 flex items-center justify-center border border-current text-sm hover:bg-ink hover:text-paper dark:hover:bg-paper dark:hover:text-ink transition-colors">▶</button>
@@ -269,6 +270,9 @@ const formatDate = (d: string | null): string => {
       });
     });
 
+    const bandCtx = { name: wrap.dataset.bandName || "", id: wrap.dataset.bandId || "" };
+    const albumCtx = { title: wrap.dataset.albumTitle || "", coverArt: wrap.dataset.albumCover || null };
+
     const tracks = Array.from(rows).map((row) => ({
       audioUrl: row.querySelector(".track-play-btn")?.dataset.audioUrl,
       title: row.querySelector(".flex-1")?.textContent?.trim() || "",
@@ -323,7 +327,7 @@ const formatDate = (d: string | null): string => {
       btn?.addEventListener("click", () => {
         const url = btn.dataset.audioUrl;
         const track = getTrackByAudioUrl(url);
-        if (track) player.toggle(track, tracks);
+        if (track) player.toggle(track, tracks, bandCtx, albumCtx);
       });
     });
 
@@ -331,9 +335,9 @@ const formatDate = (d: string | null): string => {
     playBtn?.addEventListener("click", () => {
       const st = player.getState();
       if (st.track && tracks.some((t) => t.audioUrl === st.track.audioUrl)) {
-        player.toggle(st.track, tracks);
+        player.toggle(st.track, tracks, bandCtx, albumCtx);
       } else if (tracks.length > 0) {
-        player.toggle(tracks[0], tracks);
+        player.toggle(tracks[0], tracks, bandCtx, albumCtx);
       }
     });
     nextBtn?.addEventListener("click", () => player.next());

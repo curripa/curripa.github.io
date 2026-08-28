@@ -6,16 +6,18 @@ export interface Props {
 const { bands } = Astro.props;
 ---
 <section id="splash" class="min-h-screen flex flex-col items-center justify-center text-center px-4 py-16">
-  <img
-    src="/SVG/LogoCurripa-negro.svg"
-    alt="Logo Curripa"
-    class="h-32 md:h-48 mb-4 dark:hidden"
-  />
-  <img
-    src="/SVG/LogoCurripa.svg"
-    alt="Logo Curripa"
-    class="h-32 md:h-48 mb-4 hidden dark:block"
-  />
+  <a href="https://curripa.github.io/nexo" target="_blank" rel="noopener noreferrer" aria-label="Logo Curripa" class="hover:opacity-70 transition-opacity">
+    <img
+      src="/SVG/LogoCurripa-negro.svg"
+      alt="Logo Curripa"
+      class="h-32 md:h-48 mb-4 dark:hidden"
+    />
+    <img
+      src="/SVG/LogoCurripa.svg"
+      alt="Logo Curripa"
+      class="h-32 md:h-48 mb-4 hidden dark:block"
+    />
+  </a>
   <img
     src="/SVG/Curripa-negro.svg"
     alt="Curripa"

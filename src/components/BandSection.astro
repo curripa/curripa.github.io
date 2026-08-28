@@ -12,8 +12,10 @@ const { band, albums } = Astro.props;
 <ScrollReveal>
   <section id={band.id} class="py-20 px-4 md:px-8 max-w-5xl mx-auto" data-band-section>
     <div class="flex flex-col items-start gap-2">
-      <img src={band.logoSvgNegro} alt={band.name} class="max-h-28 md:max-h-36 w-auto max-w-xs dark:hidden" />
-      <img src={band.logoSvg} alt={band.name} class="max-h-28 md:max-h-36 w-auto max-w-xs hidden dark:block" />
+      <a href={`https://curripa.github.io/nexo/${band.id}`} target="_blank" rel="noopener noreferrer" aria-label={`Logo ${band.name}`} class="contents group">
+        <img src={band.logoSvgNegro} alt={band.name} class="max-h-28 md:max-h-36 w-auto max-w-xs dark:hidden hover:opacity-70 group-hover:opacity-70 transition-opacity" />
+        <img src={band.logoSvg} alt={band.name} class="max-h-28 md:max-h-36 w-auto max-w-xs hidden dark:block hover:opacity-70 group-hover:opacity-70 transition-opacity" />
+      </a>
       <p class="text-sm opacity-60 uppercase tracking-widest">{band.yearsActive}</p>
     </div>
     <p

@@ -69,25 +69,29 @@ for (const file of bandFiles) {
     }
 
     // 2) Fallback: scrape music-grid HTML
-    if (albums.length === 0) {
-      const itemRegex = /<a\s+href="(\/album\/[^"]+)"[^>]*>[\s\S]*?<img\s+src="([^"]+)"[^>]*>[\s\S]*?<p[^>]*class="title"[^>]*>([\s\S]*?)<\/p>/gi;
-      let match;
-      while ((match = itemRegex.exec(html)) !== null) {
-        const href = match[1];
-        const coverArt = match[2];
-        const title = match[3].replace(/<[^>]+>/g, '').trim();
-        const bandcampUrl = `https://${new URL(band.bandcampUrl).hostname}${href}`;
-        albums.push({
-          albumId: extractAlbumId(href),
-          title,
-          year: null,
-          releaseDate: null,
-          coverArt,
-          bandcampUrl,
-          numericId: null,
-          tracks: [],
-        });
-      }
+    const existingIds = new Set(albums.map((a) => a.albumId));
+    const itemRegex = /<a\s+href="(\/album\/[^"]+)"[^>]*>[\s\S]*?<img([^>]+)>[\s\S]*?<p[^>]*class="title"[^>]*>([\s\S]*?)<\/p>/gi;
+    let match;
+    while ((match = itemRegex.exec(html)) !== null) {
+      const href = match[1];
+      const albumId = extractAlbumId(href);
+      if (existingIds.has(albumId)) continue;
+      const imgAttrs = match[2];
+      const title = match[3].replace(/<[^>]+>/g, '').trim();
+      let coverArt = imgAttrs.match(/data-original="([^"]+)"/)?.[1] || imgAttrs.match(/\ssrc="([^"]+)"/)?.[1] || null;
+      if (coverArt === '/img/0.gif') coverArt = null;
+      const bandcampUrl = `https://${new URL(band.bandcampUrl).hostname}${href}`;
+      albums.push({
+        albumId,
+        title,
+        year: null,
+        releaseDate: null,
+        coverArt,
+        bandcampUrl,
+        numericId: null,
+        tracks: [],
+      });
+      existingIds.add(albumId);
     }
 
     // Ensure bandcampUrl is always set

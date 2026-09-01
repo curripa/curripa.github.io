@@ -74,6 +74,8 @@ function getDiscography(bandId: string): Album[] {
       section.querySelector(".discography-view")?.classList.add("hidden");
       const detail = section.querySelector(`[data-album-detail="${albumId}"]`);
       if (detail) detail.classList.remove("hidden");
+      const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      section.scrollIntoView({ behavior: reduceMotion ? "instant" : "smooth", block: "start" });
     }
 
     const back = e.target.closest(".album-back-btn");

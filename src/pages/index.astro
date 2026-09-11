@@ -23,6 +23,19 @@ function getDiscography(bandId: string): Album[] {
   const data = discographyModules[path];
   return (data as Album[]) || [];
 }
+
+const allAlbums: Album[] = Object.values(discographyModules).flat() as Album[];
+const totalAlbums = allAlbums.length;
+const totalSongs = allAlbums.reduce((n, a) => n + a.tracks.length, 0);
+const totalSeconds = allAlbums.reduce((n, a) => n + a.tracks.reduce((s, t) => s + (t.duration ?? 0), 0), 0);
+function formatDuration(s: number): string {
+  const h = Math.floor(s / 3600);
+  const m = Math.floor((s % 3600) / 60);
+  if (h > 0) return `${h}h ${m}m`;
+  if (m > 0) return `${m}m`;
+  return `${Math.floor(s)}s`;
+}
+const totalDuration = formatDuration(totalSeconds);
 ---
 <BaseLayout title="CURRIPA" description="">
   <main>
@@ -31,7 +44,7 @@ function getDiscography(bandId: string): Album[] {
       <BandSection band={band} albums={getDiscography(band.id)} />
     ))}
   </main>
-  <Footer />
+  <Footer totalAlbums={totalAlbums} totalSongs={totalSongs} totalDuration={totalDuration} />
 </BaseLayout>
 
 <script>

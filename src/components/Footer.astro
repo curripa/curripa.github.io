@@ -1,7 +1,21 @@
 ---
+export interface Props {
+  totalAlbums?: number;
+  totalSongs?: number;
+  totalDuration?: string;
+}
+const { totalAlbums = 0, totalSongs = 0, totalDuration = "" } = Astro.props;
 const year = new Date().getFullYear();
+const fallbackAlbums = totalAlbums === 1 ? "álbum" : "álbumes";
+const fallbackSongs = totalSongs === 1 ? "canción" : "canciones";
+const params = JSON.stringify({ albums: totalAlbums, songs: totalSongs, duration: totalDuration });
 ---
 <footer class="py-10 text-center">
+  {totalAlbums > 0 && (
+    <p class="mb-4 text-xs tracking-wide opacity-60" data-i18n="footer.stats" data-i18n-params={params}>
+      {totalAlbums} {fallbackAlbums} · {totalSongs} {fallbackSongs} · {totalDuration}
+    </p>
+  )}
   <img
     src="/SVG/Curripa-negro.svg"
     alt="Curripa"

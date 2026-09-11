@@ -18,6 +18,11 @@ export const dict = {
     "layout.title": "CURRIPA",
     "layout.description": "Colectivo creativo DIY",
     "layout.themeToggle": "Cambiar tema",
+    "footer.album.one": "álbum",
+    "footer.album.other": "álbumes",
+    "footer.song.one": "canción",
+    "footer.song.other": "canciones",
+    "footer.stats": "{{albums}} {{albumLabel}} · {{songs}} {{songLabel}} · {{duration}}",
   },
   en: {
     "splash.tagline":
@@ -30,5 +35,10 @@ export const dict = {
     "layout.title": "CURRIPA",
     "layout.description": "DIY creative collective",
     "layout.themeToggle": "Change theme",
+    "footer.album.one": "album",
+    "footer.album.other": "albums",
+    "footer.song.one": "song",
+    "footer.song.other": "songs",
+    "footer.stats": "{{albums}} {{albumLabel}} · {{songs}} {{songLabel}} · {{duration}}",
   },
 };

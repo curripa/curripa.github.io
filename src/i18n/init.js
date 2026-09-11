@@ -10,7 +10,24 @@ function applyLanguage(lang) {
 
   document.querySelectorAll("[data-i18n]").forEach((el) => {
     const key = el.getAttribute("data-i18n");
-    if (key && key in strings) el.textContent = strings[key];
+    if (!key || !(key in strings)) return;
+    let text = strings[key];
+    const raw = el.getAttribute("data-i18n-params");
+    if (raw) {
+      try {
+        const params = JSON.parse(raw);
+        if (key === "footer.stats") {
+          const a = Number(params.albums);
+          const s = Number(params.songs);
+          params.albumLabel = strings[a === 1 ? "footer.album.one" : "footer.album.other"] ?? "";
+          params.songLabel = strings[s === 1 ? "footer.song.one" : "footer.song.other"] ?? "";
+        }
+        for (const [k, v] of Object.entries(params)) {
+          text = text.replaceAll(`{{${k}}}`, String(v));
+        }
+      } catch {}
+    }
+    el.textContent = text;
   });
 
   document.querySelectorAll("[data-i18n-aria]").forEach((el) => {

@@ -1,10 +1,15 @@
 import { readFileSync, writeFileSync, mkdirSync, readdirSync, existsSync } from 'fs';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
+import { describeResponse, fetchOptions, isChallengeHtml } from './lib/bandcamp.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const bandsDir = join(__dirname, '..', 'src', 'data', 'bands');
 const outputDir = join(__dirname, '..', 'src', 'data', 'generated', 'discography');
+
+const STRICT = process.env.BANDCAMP_STRICT === '1';
+const DIAGNOSTIC = process.env.BANDCAMP_DIAGNOSTIC === '1';
+const failures = [];
 
 mkdirSync(outputDir, { recursive: true });
 
@@ -26,9 +31,24 @@ for (const file of bandFiles) {
   console.log(`Fetching ${band.name}...`);
 
   try {
-    const response = await fetch(`${band.bandcampUrl}/music`);
-    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    const response = await fetch(
+      `${band.bandcampUrl}/music`,
+      fetchOptions({ signal: AbortSignal.timeout(15000) })
+    );
     const html = await response.text();
+    const challenge = isChallengeHtml(html);
+
+    if (DIAGNOSTIC || challenge || !response.ok || html.length < 10000) {
+      console.log(`  · ${describeResponse(response, html)}`);
+    }
+    if (challenge) {
+      throw new Error('Bandcamp bot challenge (DataDome)');
+    }
+    if (!response.ok) {
+      const retryAfter = response.headers.get('retry-after');
+      throw new Error(`HTTP ${response.status}${retryAfter ? ` (retry-after ${retryAfter})` : ''}`);
+    }
+
     const albums = [];
     const lyricsByTitle = {};
 
@@ -102,14 +122,26 @@ for (const file of bandFiles) {
       if (album.coverArt) album.coverArt = normalizeCoverSize(album.coverArt);
     }
 
+    if (albums.length === 0) {
+      throw new Error('No albums parsed (HTML changed or request challenged)');
+    }
+
     // 3) Fetch each album page for numeric ID and year
+    let albumDetailFailures = 0;
     for (const album of albums) {
       if (album.numericId) continue;
       const url = album.bandcampUrl;
       if (!url) continue;
       try {
-        const pageRes = await fetch(url, { signal: AbortSignal.timeout(10000) });
+        const pageRes = await fetch(
+          url,
+          fetchOptions({ signal: AbortSignal.timeout(10000) })
+        );
         const pageHtml = await pageRes.text();
+
+        if (isChallengeHtml(pageHtml)) {
+          throw new Error('Bandcamp bot challenge (DataDome)');
+        }
 
         const embedMatch = pageHtml.match(/data-embed="([^"]+)"/);
         if (embedMatch) {
@@ -134,6 +166,27 @@ for (const file of bandFiles) {
         const ogImageMatch = pageHtml.match(/<meta property="og:image"\s+content="([^"]+)"/);
         if (ogImageMatch && !album.coverArt) album.coverArt = ogImageMatch[1];
 
+        // Extract lyrics from album page JSON-LD (fallback for /music without lyrics, e.g. Kyshtym Prototipo)
+        const albumLyrics = {};
+        const ldAlbumScripts = pageHtml.matchAll(
+          /<script[^>]*type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/gi
+        );
+        for (const [, json] of ldAlbumScripts) {
+          try {
+            const data = JSON.parse(json.trim());
+            const items = Array.isArray(data) ? data : [data];
+            for (const item of items) {
+              if (item['@type'] === 'MusicAlbum') {
+                for (const entry of item.track?.itemListElement ?? []) {
+                  const rec = entry.item || entry;
+                  const text = rec.recordingOf?.lyrics?.text;
+                  if (rec.name && text) albumLyrics[rec.name] = text;
+                }
+              }
+            }
+          } catch { /* skip */ }
+        }
+
         // Extract track listing from data-tralbum JSON attribute
         const tralbumMatch = pageHtml.match(/data-tralbum="([^"]+)"/);
         if (tralbumMatch) {
@@ -155,26 +208,45 @@ for (const file of bandFiles) {
                 trackId: t.track_id || null,
                 duration: t.duration || null,
                 audioUrl: pickAudioUrl(t.file),
-                lyrics: lyricsByTitle[t.title] || null,
+                lyrics: albumLyrics[t.title] || lyricsByTitle[t.title] || null,
               }));
             }
           } catch { /* skip invalid JSON */ }
         }
       } catch (err) {
+        albumDetailFailures++;
         console.warn(`  ↪ Could not fetch detail for "${album.title}": ${err.message}`);
       }
+    }
+
+    if (albumDetailFailures > 0) {
+      failures.push({
+        band: band.name,
+        error: `${albumDetailFailures} album detail(s) failed`,
+      });
     }
 
     writeFileSync(cachePath, JSON.stringify(albums, null, 2) + '\n');
     console.log(`  → ${albums.length} album(s) cached`);
   } catch (err) {
+    failures.push({ band: band.name, error: err.message });
     console.warn(`  ✗ Failed: ${err.message}`);
     if (!existsSync(cachePath)) {
-      writeFileSync(cachePath, '[]\n');
-      console.warn(`  → Created empty cache for ${band.id}`);
+      console.warn(`  → No cache written for ${band.id}`);
     } else {
       console.warn(`  → Preserved existing cache`);
     }
+  }
+}
+
+if (failures.length > 0) {
+  console.error(`\n${failures.length}/${bandFiles.length} band(s) failed:`);
+  for (const failure of failures) {
+    console.error(`  - ${failure.band}: ${failure.error}`);
+  }
+  if (STRICT) {
+    console.error('BANDCAMP_STRICT=1: aborting build.');
+    process.exitCode = 1;
   }
 }
 

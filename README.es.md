@@ -87,6 +87,8 @@ npm run fetch:bandcamp:download  # además descarga cada canción (public/audio/
 
 `public/audio/` y `public/img/covers/` los genera el script de descarga y no deberían editarse a mano. `npm run build` ejecuta la variante de descarga automáticamente mediante su hook `prebuild`; los archivos generados (`src/data/generated/`) se recalculan en cada despliegue.
 
+`npm run check:bandcamp` inspecciona la respuesta actual de Bandcamp (status, tamaño, detección de bot challenge) y sale con error si las páginas están bloqueadas. Con `BANDCAMP_STRICT=1` (lo usa el workflow de deploy), `prebuild` falla en vez de publicar una discografía vacía cuando Bandcamp devuelve un challenge; `BANDCAMP_DIAGNOSTIC=1` imprime el status y el tamaño de cada banda. Los scripts **no** envían un User-Agent de navegador a propósito: la protección anti-bot de Bandcamp bloquea las peticiones que imitan un navegador, mientras que el cliente por defecto de Node sí pasa.
+
 ### Añadir un grupo
 
 1. Crear `src/data/bands/<id>.json` con la estructura de los archivos existentes (`id`, `name`, `yearsActive`, `description`, `history`, `historyEn`, `bandcampUrl`, `logoSvg`, `logoSvgNegro`).

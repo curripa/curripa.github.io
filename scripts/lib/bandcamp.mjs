@@ -29,9 +29,40 @@ export function describeResponse(response, html) {
 
 const JINA_ENABLED = process.env.BANDCAMP_JINA === '1';
 const JINA_BASE = 'https://r.jina.ai/';
+const JINA_MIN_INTERVAL_MS = 2500;
+const JINA_MAX_RETRIES = 3;
+let lastJinaRequestAt = 0;
 
 function isUsableBandcampHtml(html) {
   return html.length >= 1000 && !isChallengeHtml(html) && html.includes('data-tralbum');
+}
+
+async function fetchJina(url, attempt = 0) {
+  const wait = JINA_MIN_INTERVAL_MS - (Date.now() - lastJinaRequestAt);
+  if (wait > 0) await new Promise((resolve) => setTimeout(resolve, wait));
+  lastJinaRequestAt = Date.now();
+
+  const response = await fetch(url, {
+    signal: AbortSignal.timeout(30000),
+    headers: {
+      'x-respond-with': 'html',
+      accept: 'text/html',
+      ...(process.env.JINA_API_KEY
+        ? { authorization: `Bearer ${process.env.JINA_API_KEY}` }
+        : {}),
+    },
+  });
+
+  if (response.status === 429 && attempt < JINA_MAX_RETRIES) {
+    await response.body?.cancel();
+    const retryAfter = Number.parseInt(response.headers.get('retry-after') || '', 10);
+    const delay = Number.isFinite(retryAfter) && retryAfter > 0 ? retryAfter * 1000 : 60000;
+    console.warn(`  · Jina rate limited, retrying in ${delay / 1000}s (attempt ${attempt + 1}/${JINA_MAX_RETRIES})`);
+    await new Promise((resolve) => setTimeout(resolve, delay));
+    return fetchJina(url, attempt + 1);
+  }
+
+  return response;
 }
 
 export async function fetchBandcampHtml(url, { timeoutMs = 15000 } = {}) {
@@ -60,13 +91,7 @@ export async function fetchBandcampHtml(url, { timeoutMs = 15000 } = {}) {
   const jinaUrl = `${JINA_BASE}${url}`;
   let jinaResponse;
   try {
-    jinaResponse = await fetch(jinaUrl, {
-      signal: AbortSignal.timeout(30000),
-      headers: {
-        'x-respond-with': 'html',
-        accept: 'text/html',
-      },
-    });
+    jinaResponse = await fetchJina(jinaUrl);
   } catch (err) {
     throw new Error(`Bandcamp and Jina requests failed: ${err.message}`);
   }

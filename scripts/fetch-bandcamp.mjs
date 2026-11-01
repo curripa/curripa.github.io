@@ -1,7 +1,7 @@
 import { readFileSync, writeFileSync, mkdirSync, readdirSync, existsSync } from 'fs';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
-import { describeResponse, fetchOptions, isChallengeHtml } from './lib/bandcamp.mjs';
+import { describeResponse, fetchBandcampHtml, isChallengeHtml } from './lib/bandcamp.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const bandsDir = join(__dirname, '..', 'src', 'data', 'bands');
@@ -31,15 +31,14 @@ for (const file of bandFiles) {
   console.log(`Fetching ${band.name}...`);
 
   try {
-    const response = await fetch(
+    const { response, html, via } = await fetchBandcampHtml(
       `${band.bandcampUrl}/music`,
-      fetchOptions({ signal: AbortSignal.timeout(15000) })
+      { timeoutMs: 15000 }
     );
-    const html = await response.text();
     const challenge = isChallengeHtml(html);
 
-    if (DIAGNOSTIC || challenge || !response.ok || html.length < 10000) {
-      console.log(`  · ${describeResponse(response, html)}`);
+    if (DIAGNOSTIC || via === 'jina' || challenge || !response.ok || html.length < 10000) {
+      console.log(`  · via=${via} ${describeResponse(response, html)}`);
     }
     if (challenge) {
       throw new Error('Bandcamp bot challenge (DataDome)');
@@ -133,12 +132,14 @@ for (const file of bandFiles) {
       const url = album.bandcampUrl;
       if (!url) continue;
       try {
-        const pageRes = await fetch(
+        const { response: pageRes, html: pageHtml, via } = await fetchBandcampHtml(
           url,
-          fetchOptions({ signal: AbortSignal.timeout(10000) })
+          { timeoutMs: 10000 }
         );
-        const pageHtml = await pageRes.text();
 
+        if (DIAGNOSTIC || via === 'jina') {
+          console.log(`  · album via=${via} ${describeResponse(pageRes, pageHtml)}`);
+        }
         if (isChallengeHtml(pageHtml)) {
           throw new Error('Bandcamp bot challenge (DataDome)');
         }

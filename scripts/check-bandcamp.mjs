@@ -1,15 +1,16 @@
 import { readFileSync, readdirSync } from 'fs';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
-import { describeResponse, fetchOptions, isChallengeHtml } from './lib/bandcamp.mjs';
+import { describeResponse, fetchBandcampHtml, isChallengeHtml } from './lib/bandcamp.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const bandsDir = join(__dirname, '..', 'src', 'data', 'bands');
 
 const bandFiles = readdirSync(bandsDir).filter((f) => f.endsWith('.json'));
 const ua = process.env.BANDCAMP_UA ? `ua="${process.env.BANDCAMP_UA}"` : 'ua=default';
+const jina = process.env.BANDCAMP_JINA === '1' ? 'jina=on' : 'jina=off';
 
-console.log(`node ${process.version} undici ${process.versions.undici ?? 'n/a'} ${ua}`);
+console.log(`node ${process.version} undici ${process.versions.undici ?? 'n/a'} ${ua} ${jina}`);
 
 let failures = 0;
 
@@ -18,13 +19,12 @@ for (const file of bandFiles) {
   const url = `${band.bandcampUrl}/music`;
 
   try {
-    const response = await fetch(url, fetchOptions({ signal: AbortSignal.timeout(15000) }));
-    const html = await response.text();
+    const { response, html, via } = await fetchBandcampHtml(url, { timeoutMs: 15000 });
     const challenge = isChallengeHtml(html);
     const hasTralbum = html.includes('data-tralbum');
     const hasMusicAlbum = html.includes('MusicAlbum');
 
-    console.log(`${band.name}: ${describeResponse(response, html)} tralbum=${hasTralbum} musicAlbum=${hasMusicAlbum}`);
+    console.log(`${band.name}: via=${via} ${describeResponse(response, html)} tralbum=${hasTralbum} musicAlbum=${hasMusicAlbum}`);
 
     if (challenge) {
       failures++;

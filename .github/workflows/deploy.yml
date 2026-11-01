@@ -11,12 +11,14 @@ permissions:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - name: Checkout your repository using git
         uses: actions/checkout@v7
       - name: Install, build, and upload your site
         uses: withastro/action@v6
+        with:
+          node-version: 24.21.0
         env:
           BANDCAMP_STRICT: "1"
           BANDCAMP_DIAGNOSTIC: "1"
